@@ -1,100 +1,126 @@
-import { Component, createEffect, createSignal, JSX } from "solid-js";
-import { NumberInput, Select, TextInput } from "./components";
+import { RouteDefinition, useRoutes, Outlet, Navigate } from "@solidjs/router";
+import { Component, Match, Switch } from "solid-js";
+import { Toaster } from "solid-toast";
 
-const DEFAULT_OPTIONS = [
+import { AuthProvider, useAuth } from "./contexts";
+import { Anchor } from "./components";
+
+// import Home from "./pages/home";
+import Test from "./pages/test";
+import Signin from "./pages/signin";
+import Signup from "./pages/signup";
+import Root from "./pages/root/root";
+import Home from "./pages/home/home";
+import Projects from "./pages/projects/projects";
+import Tasks from "./pages/tasks/tasks";
+import Workplans from "./pages/workplans/workplans";
+import Trackers from "./pages/trackers/trackers";
+import Users from "./pages/users/users";
+
+const Protected = () => {
+  const [session, isInitialized] = useAuth();
+
+  return (
+    <Switch fallback={<p>Loading protected...</p>}>
+      <Match when={isInitialized() && session()}>
+        <Root />
+      </Match>
+      <Match when={isInitialized() && !session()}>
+        <Navigate href="/signin" />
+      </Match>
+    </Switch>
+  );
+};
+
+const Unprotected = () => {
+  const [session, isInitialized] = useAuth();
+
+  return (
+    <Switch fallback={<p>Loading unprotected...</p>}>
+      <Match when={isInitialized() && session()}>
+        <Navigate href="/" />
+      </Match>
+      <Match when={isInitialized() && !session()}>
+        <Outlet />
+      </Match>
+    </Switch>
+  );
+};
+
+const NotFound = () => {
+  return (
+    <div class="h-screen w-screen flex items-center justify-center flex-col space-y-4">
+      <h1 class="text-4xl">Page Not Found</h1>
+      <Anchor href="/" size="lg">
+        &larr; Back to home
+      </Anchor>
+    </div>
+  );
+};
+
+const routes: RouteDefinition[] = [
   {
-    value: "1",
-    label: "Muhammad Muslim Syaifullah",
+    path: "",
+    component: Protected,
+    children: [
+      {
+        path: "/",
+        component: Home,
+      },
+      {
+        path: "/projects",
+        component: Projects,
+      },
+      {
+        path: "/workplans",
+        component: Workplans,
+      },
+      {
+        path: "/tasks",
+        component: Tasks,
+      },
+      {
+        path: "/trackers",
+        component: Trackers,
+      },
+      {
+        path: "/users",
+        component: Users,
+      },
+    ],
   },
   {
-    value: "2",
-    label: "Muhammad Hidayatullah",
+    path: "",
+    component: Unprotected,
+    children: [
+      {
+        path: "/signin",
+        component: Signin,
+      },
+      {
+        path: "/signup",
+        component: Signup,
+      },
+    ],
   },
   {
-    value: "3",
-    label: "Muhammad Ilham",
+    path: "/test",
+    component: Test,
   },
   {
-    value: "4",
-    label: "Muhammad Luthfi",
-  },
-  {
-    value: "5",
-    label: "Ulfathun Mawaddah",
-  },
-  {
-    value: "6",
-    label: "Zikra Siti Nabila",
-  },
-  {
-    value: "7",
-    label: "John",
-  },
-  {
-    value: "8",
-    label: "Jane",
+    path: "*",
+    component: NotFound,
   },
 ];
 
 const App: Component = () => {
-  const [error, setError] = createSignal("");
-  const [selectedUser, setSelectedUser] = createSignal("");
-  const [age, setAge] = createSignal(0);
-  const [name, setName] = createSignal("");
-
-  const [options, setOptions] = createSignal(DEFAULT_OPTIONS);
-
-  const handleSelectUser = (v: string) => {
-    setSelectedUser(v);
-  };
-
-  const handleChangeName = (v: string) => {
-    setName(v);
-  };
-
-  createEffect(() => {
-    console.log("Selected User", selectedUser());
-  });
-
-  const handleChangeAge = (v: number) => {
-    setAge(v);
-  };
+  const Routes = useRoutes(routes);
 
   return (
-    <div>
-      <p class="text-4xl text-green-700 text-center py-20">Hello tailwind!</p>
-      <div class="max-w-xs mx-auto space-y-6">
-        <p>Name: {name()}</p>
-        <p>User: {selectedUser()}</p>
-        <p>Age: {age()}</p>
-        <TextInput
-          label="Name"
-          name="name"
-          description="Your full name"
-          required
-          withRequiredLabel
-          error={error()}
-          value={name()}
-          onChange={handleChangeName}
-        />
-        <Select
-          name="user"
-          label="Select User"
-          options={options()}
-          onChange={(v) => setSelectedUser(v.value)}
-          value={selectedUser()}
-          description="Pick your user"
-        />
-        <NumberInput
-          label="Age"
-          min={0}
-          max={10}
-          value={age()}
-          onChange={handleChangeAge}
-        />
-      </div>
-      {/* <button onClick={handleSetError}>Set Error</button> */}
-    </div>
+    <AuthProvider>
+      <Routes />
+      <Toaster />
+    </AuthProvider>
   );
 };
 

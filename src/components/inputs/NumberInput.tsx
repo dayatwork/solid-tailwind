@@ -49,7 +49,7 @@ export function NumberInput(props: NumberInputProps) {
         <input
           class={`block w-full rounded-md sm:text-sm focus:outline-none ${
             !props.error
-              ? "pr-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+              ? "pr-10 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
               : "border-red-300 focus:border-red-500 focus:ring-red-500"
           }`}
           {...api().inputProps}

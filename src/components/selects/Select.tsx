@@ -7,7 +7,7 @@ interface SelectProps {
   label?: string;
   name: string;
   options: select.OptionProps[];
-  onChange: (v: select.OptionProps) => void;
+  onChange?: (v: select.OptionProps) => void;
   value?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -21,7 +21,7 @@ export function Select(props: SelectProps) {
       id: createUniqueId(),
       name: props.name,
       onChange: props.onChange,
-      selectedOption: props.options.find((o) => o.value === props.value),
+      selectedOption: props.options?.find((o) => o.value === props.value),
       loop: true,
       selectOnTab: true,
       disabled: props.disabled,
@@ -52,7 +52,7 @@ export function Select(props: SelectProps) {
             type="button"
             class={`relative mt-1 w-full cursor-default rounded-md border bg-white py-2 pl-3 pr-10 text-left shadow-sm  focus:outline-none focus:ring-1 sm:text-sm ${
               !props.error
-                ? "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                ? "border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 : "border-red-300 focus:border-red-500 focus:ring-red-500"
             }`}
             {...api().triggerProps}
@@ -90,69 +90,69 @@ export function Select(props: SelectProps) {
           </Show>
         </div>
 
-        <Portal>
-          <div {...api().positionerProps}>
-            <ul
-              class="max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-              {...api().contentProps}
-            >
-              <For each={props.options}>
-                {(option) => (
-                  <li
-                    class={`relative  select-none py-2 pl-3 pr-12 hover:text-white hover:bg-indigo-600 ${
-                      api().highlightedOption?.value === option.value
-                        ? "text-white bg-indigo-600"
-                        : "text-gray-900"
-                    } ${
-                      option.disabled
-                        ? "text-gray-300 cursor-not-allowed"
-                        : "cursor-default"
+        {/* <Portal> */}
+        <div {...api().positionerProps}>
+          <ul
+            class="max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            {...api().contentProps}
+          >
+            <For each={props.options}>
+              {(option) => (
+                <li
+                  class={`relative  select-none py-2 pl-3 pr-12 hover:text-white hover:bg-purple-600 ${
+                    api().highlightedOption?.value === option.value
+                      ? "text-white bg-purple-600"
+                      : "text-gray-900"
+                  } ${
+                    option.disabled
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "cursor-default"
+                  }`}
+                  {...api().getOptionProps({
+                    label: option.label,
+                    value: option.value,
+                    disabled: option.disabled,
+                  })}
+                >
+                  <span
+                    class={`block truncate ${
+                      api().selectedOption?.value === option.value
+                        ? "font-semibold"
+                        : "font-normal"
                     }`}
-                    {...api().getOptionProps({
-                      label: option.label,
-                      value: option.value,
-                      disabled: option.disabled,
-                    })}
                   >
+                    {option.label}
+                  </span>
+                  <Show when={api().selectedOption?.value === option.value}>
                     <span
-                      class={`block truncate ${
-                        api().selectedOption?.value === option.value
-                          ? "font-semibold"
-                          : "font-normal"
+                      class={`absolute inset-y-0 right-0 flex items-center pr-4 ${
+                        api().highlightedOption?.value === option.value
+                          ? "text-white"
+                          : "text-purple-600"
                       }`}
                     >
-                      {option.label}
-                    </span>
-                    <Show when={api().selectedOption?.value === option.value}>
-                      <span
-                        class={`absolute inset-y-0 right-0 flex items-center pr-4 ${
-                          api().highlightedOption?.value === option.value
-                            ? "text-white"
-                            : "text-indigo-600"
-                        }`}
+                      {/* <!-- Heroicon name: mini/check --> */}
+                      <svg
+                        class="h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
                       >
-                        {/* <!-- Heroicon name: mini/check --> */}
-                        <svg
-                          class="h-5 w-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    </Show>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </div>
-        </Portal>
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </Show>
+                </li>
+              )}
+            </For>
+          </ul>
+        </div>
+        {/* </Portal> */}
       </div>
     </div>
   );

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "generate": "supabase gen types typescript --project-id \"kwkghzudrprgwzofoyfv\" --schema public > ./src/lib/supabase/schema.ts"
   },
   "license": "MIT",
   "devDependencies": {
@@ -18,10 +19,17 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@motionone/solid": "^10.15.4",
+    "@solidjs/router": "^0.6.0",
+    "@supabase/supabase-js": "^2.2.3",
+    "@zag-js/dialog": "^0.2.6",
+    "@zag-js/menu": "^0.3.3",
     "@zag-js/number-input": "^0.2.7",
     "@zag-js/select": "^0.1.6",
     "@zag-js/solid": "^0.2.4",
+    "@zag-js/tooltip": "^0.2.6",
     "solid-icons": "^1.0.4",
-    "solid-js": "^1.6.6"
+    "solid-js": "^1.6.6",
+    "solid-toast": "^0.4.0"
   }
 }
