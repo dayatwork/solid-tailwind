@@ -3,16 +3,16 @@ import { HiSolidArrowLeft, HiSolidPencil } from "solid-icons/hi";
 import { createSignal, onMount, Show } from "solid-js";
 import toast from "solid-toast";
 
-import { Dialog, Loader } from "../../components";
-import { supabase } from "../../lib";
+import { Dialog, Loader } from "../../../components";
+import { supabase } from "../../../lib";
 import {
   CreateProjectForm,
   DeleteProjectForm,
   ProjectInfo,
   ProjectMembers,
   UpdateProjectForm,
-} from "./components";
-import { ProjectWithMembers } from "./type";
+} from "../components";
+import { ProjectWithMembers } from "../type";
 
 export const SELECT_PROJECT_WITH_MEMBER_QUERY =
   "*, members:project_members(*, member:member_id(id, full_name, avatar_url))";

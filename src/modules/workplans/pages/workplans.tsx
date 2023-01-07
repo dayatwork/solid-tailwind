@@ -1,5 +1,9 @@
-import { PageTitle, WorkplanList, WorkplanTable } from "./components";
-import { PinnedWorkplan } from "./components/PinnedWorkplan";
+import {
+  PageTitle,
+  WorkplanList,
+  WorkplanTable,
+  PinnedWorkplan,
+} from "../components";
 
 interface WorkplansProps {
   // add props here

@@ -1,4 +1,4 @@
-import { PageTitle } from "./components";
+import { PageTitle } from "../components";
 
 interface HomeProps {
   // add props here

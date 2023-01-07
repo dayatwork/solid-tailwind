@@ -1,8 +1,9 @@
 import { createSignal } from "solid-js";
 import toast from "solid-toast";
-import { Anchor, Button, Checkbox, Divider, TextInput } from "../components";
-import OAuthButton from "../components/button/OAuthButton";
-import { supabase } from "../lib";
+
+import { Anchor, Button, Divider, TextInput } from "../../../components";
+import OAuthButton from "../../../components/button/OAuthButton";
+import { supabase } from "../../../lib";
 
 interface SignupProps {
   // add props here

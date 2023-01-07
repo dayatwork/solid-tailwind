@@ -2,12 +2,12 @@ import { AuthSession } from "@supabase/supabase-js";
 import { createSignal, onMount } from "solid-js";
 import toast from "solid-toast";
 
-import { Dialog } from "../../components";
-import { useAuth } from "../../contexts";
-import { supabase } from "../../lib";
-import { CreateProjectForm, ProjectList, ProjectTable } from "./components";
-import { MyProjects } from "./components";
-import { ProjectWithMembers } from "./type";
+import { Dialog } from "../../../components";
+import { useAuth } from "../../../contexts";
+import { supabase } from "../../../lib";
+import { CreateProjectForm, ProjectList, ProjectTable } from "../components";
+import { MyProjects } from "../components";
+import { ProjectWithMembers } from "../type";
 
 export const SELECT_PROJECT_WITH_MEMBER_QUERY =
   "*, members:project_members(*, member:member_id(id, full_name, avatar_url))";

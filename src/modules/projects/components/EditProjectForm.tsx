@@ -4,7 +4,7 @@ import toast from "solid-toast";
 import { Button, Select, Textarea, TextInput } from "../../../components";
 import { supabase } from "../../../lib";
 import { ProjectStatus, projectStatusOptions } from "../constant";
-import { SELECT_PROJECT_WITH_MEMBER_QUERY } from "../projects";
+import { SELECT_PROJECT_WITH_MEMBER_QUERY } from "../pages/projects";
 import { ProjectWithMembers } from "../type";
 
 interface UpdateProjectFormProps {
