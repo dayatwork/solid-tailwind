@@ -1,5 +1,9 @@
-import { PageTitle, TrackerList, TrackerTable } from "./components";
-import { PinnedTracker } from "./components/PinnedTracker";
+import {
+  PageTitle,
+  TrackerList,
+  TrackerTable,
+  PinnedTracker,
+} from "../components";
 
 interface TrackersProps {
   // add props here

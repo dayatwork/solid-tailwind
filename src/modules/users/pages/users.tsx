@@ -1,10 +1,9 @@
 import { createSignal, onMount } from "solid-js";
 import toast from "solid-toast";
 
-import { supabase } from "../../lib";
-import { PageTitle, UserList, UserTable } from "./components";
-import { PinnedUser } from "./components/PinnedUser";
-import { User } from "./type";
+import { supabase } from "../../../lib";
+import { PageTitle, UserList, UserTable, PinnedUser } from "../components";
+import { User } from "../type";
 
 interface UsersProps {
   // add props here

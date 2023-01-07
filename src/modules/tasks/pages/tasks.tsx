@@ -1,5 +1,4 @@
-import { PageTitle, TaskList, TaskTable } from "./components";
-import { PinnedTask } from "./components/PinnedTask";
+import { PageTitle, TaskList, TaskTable, PinnedTask } from "../components";
 
 interface TasksProps {
   // add props here

@@ -3,7 +3,7 @@ import toast from "solid-toast";
 
 import { Button, Select, TextInput } from "../../../components";
 import { supabase } from "../../../lib";
-import { MemberWithUser, ProjectWithMembers } from "../type";
+import { MemberWithUser } from "../type";
 
 export const SELECT__MEMBER_QUERY =
   "*, member:member_id(id, full_name, avatar_url)";

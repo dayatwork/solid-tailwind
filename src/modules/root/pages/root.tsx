@@ -1,6 +1,6 @@
 import { Outlet } from "@solidjs/router";
 import { createSignal, Show } from "solid-js";
-import { DesktopNav, MobileNav, SearchHeader } from "./components";
+import { DesktopNav, MobileNav, SearchHeader } from "../components";
 
 interface RootProps {
   // add props here
