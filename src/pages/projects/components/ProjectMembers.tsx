@@ -55,7 +55,7 @@ export function ProjectMembers(props: ProjectMembersProps) {
 
   return (
     <div>
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-4 justify-between">
         <h2 class="text-sm font-medium text-gray-500">Members</h2>
         <Switch>
           <Match when={!isEditMode()}>
@@ -63,7 +63,7 @@ export function ProjectMembers(props: ProjectMembersProps) {
               onClick={openEditMode}
               class="flex items-center space-x-1 text-purple-500 font-medium hover:text-purple-700"
             >
-              <HiSolidPencil />
+              <HiSolidPencil size={14} />
               <span class="text-sm">Open Edit Mode</span>
             </button>
           </Match>
@@ -72,7 +72,7 @@ export function ProjectMembers(props: ProjectMembersProps) {
               onClick={closeEditMode}
               class="flex items-center space-x-1 text-purple-500 font-medium hover:text-purple-700"
             >
-              <HiSolidX />
+              <HiSolidX size={14} />
               <span class="text-sm">Close Edit Mode</span>
             </button>
           </Match>
@@ -117,7 +117,12 @@ export function ProjectMembers(props: ProjectMembersProps) {
         </For>
       </ul>
       <Dialog
-        trigger="+ Add Member"
+        trigger={
+          <div class="flex items-center space-x-2.5">
+            <div class="w-[30px] h-[30px] rounded-full bg-gray-300"></div>
+            <span>+ Add Member</span>
+          </div>
+        }
         triggerClass="text-sm font-medium text-purple-500 hover:text-purple-700"
         title="Add Member"
       >
