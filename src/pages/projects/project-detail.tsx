@@ -122,7 +122,9 @@ function ProjectDetail(props: ProjectDetailProps) {
                     </div>
                   </aside>
                   <div class="py-3 xl:pt-6 xl:pb-0">
-                    <h2 class="sr-only">Description</h2>
+                    <h2 class="text-sm font-medium text-gray-900 mb-2">
+                      Description
+                    </h2>
                     <div class="max-w-5xl">
                       <p class="text-gray-900">{project().description}</p>
                     </div>

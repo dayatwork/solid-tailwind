@@ -1,10 +1,12 @@
+import { AuthSession } from "@supabase/supabase-js";
 import { createSignal, onMount } from "solid-js";
 import toast from "solid-toast";
 
 import { Dialog } from "../../components";
+import { useAuth } from "../../contexts";
 import { supabase } from "../../lib";
 import { CreateProjectForm, ProjectList, ProjectTable } from "./components";
-import { PinnedProject } from "./components/PinnedProject";
+import { MyProjects } from "./components";
 import { ProjectWithMembers } from "./type";
 
 export const SELECT_PROJECT_WITH_MEMBER_QUERY =
@@ -17,6 +19,17 @@ interface ProjectsProps {
 function Projects(props: ProjectsProps) {
   const [loading, setLoading] = createSignal(false);
   const [projects, setProjects] = createSignal<ProjectWithMembers[]>([]);
+  const [session] = useAuth();
+
+  const myOngoingProjects = () => {
+    const userId = (session() as AuthSession).user.id;
+
+    if (!userId) return [];
+
+    return projects().filter((p) =>
+      p.members.map((m) => m.member_id).includes(userId)
+    );
+  };
 
   onMount(() => {
     getProjects();
@@ -56,7 +69,7 @@ function Projects(props: ProjectsProps) {
       <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div class="min-w-0 flex-1">
           <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-            Project
+            Projects
           </h1>
         </div>
         <div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -75,7 +88,7 @@ function Projects(props: ProjectsProps) {
         </div>
       </div>
 
-      <PinnedProject />
+      <MyProjects projects={myOngoingProjects()} loading={loading()} />
       <ProjectList projects={projects()} loading={loading()} />
       <ProjectTable projects={projects()} loading={loading()} />
     </>

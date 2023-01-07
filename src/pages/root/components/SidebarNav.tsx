@@ -1,4 +1,4 @@
-import { A, useLocation } from "@solidjs/router";
+import { A, useLocation, useNavigate } from "@solidjs/router";
 import { IconTypes } from "solid-icons";
 import {
   HiOutlineClock,
@@ -9,6 +9,7 @@ import {
   HiOutlineUserGroup,
 } from "solid-icons/hi";
 import { createEffect, createSignal, For } from "solid-js";
+import { useAuth } from "../../../contexts";
 
 const navs = [
   {

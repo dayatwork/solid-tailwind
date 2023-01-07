@@ -1,4 +1,5 @@
 import { useNavigate } from "@solidjs/router";
+import { AuthSession } from "@supabase/supabase-js";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import {
@@ -9,10 +10,19 @@ import {
   HiOutlineLogout,
   HiOutlineUserCircle,
 } from "solid-icons/hi";
-import { createMemo, createUniqueId, For } from "solid-js";
+import {
+  createMemo,
+  createSignal,
+  createUniqueId,
+  For,
+  onMount,
+} from "solid-js";
 import toast from "solid-toast";
 
+import { Avatar } from "../../../components";
+import { useAuth } from "../../../contexts";
 import { supabase } from "../../../lib";
+import { Profile } from "../type";
 
 interface UserAccountDropdownProps {
   avatarUrl?: string;
@@ -55,6 +65,36 @@ const menuOptions = [
 
 export function UserAccountDropdown(props: UserAccountDropdownProps) {
   const navigate = useNavigate();
+  const [session] = useAuth();
+  const [profile, setProfile] = createSignal<Profile>();
+
+  onMount(() => {
+    getProfile();
+  });
+
+  const getProfile = async () => {
+    if (session()) {
+      const userId = (session() as AuthSession).user.id;
+
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        setProfile(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        }
+      }
+    }
+  };
 
   const [state, send] = useMachine(
     menu.machine({
@@ -87,28 +127,21 @@ export function UserAccountDropdown(props: UserAccountDropdownProps) {
   };
 
   return (
-    <div class="relative inline-block px-3 text-left mt-1">
+    <div class="relative inline-block px-2 text-left mt-1">
       <div>
         <button
-          class="group w-full rounded-md bg-gray-100 px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          class="group w-full rounded-md bg-gray-100 px-2 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100"
           {...api().triggerProps}
         >
           <span class="flex w-full items-center justify-between">
             <span class="flex min-w-0 items-center justify-between space-x-3">
-              <img
-                class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                src={
-                  props.avatarUrl ||
-                  "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80"
-                }
-                alt={props.name}
-              />
+              <Avatar size="45px" avatarPath={profile()?.avatar_url} />
               <span class="flex min-w-0 flex-1 flex-col">
                 <span class="truncate text-sm font-medium text-gray-900">
-                  {props.name || "Jessy Schwarz"}
+                  {profile()?.full_name}
                 </span>
                 <span class="truncate text-sm text-gray-500">
-                  {props.email || "@jessyschwarz"}
+                  {profile()?.email}
                 </span>
               </span>
             </span>

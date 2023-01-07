@@ -18,7 +18,7 @@ export interface Database {
           avatar_url: string | null
           last_sign_in_at: string | null
           employee_number: string | null
-          registered_at: string | null
+          registered_at: string
         }
         Insert: {
           id: string
@@ -28,7 +28,7 @@ export interface Database {
           avatar_url?: string | null
           last_sign_in_at?: string | null
           employee_number?: string | null
-          registered_at?: string | null
+          registered_at?: string
         }
         Update: {
           id?: string
@@ -38,7 +38,7 @@ export interface Database {
           avatar_url?: string | null
           last_sign_in_at?: string | null
           employee_number?: string | null
-          registered_at?: string | null
+          registered_at?: string
         }
       }
       project_members: {
