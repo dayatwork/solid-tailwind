@@ -22,6 +22,7 @@
     "@motionone/solid": "^10.15.4",
     "@solidjs/router": "^0.6.0",
     "@supabase/supabase-js": "^2.2.3",
+    "@tanstack/solid-query": "^4.20.9",
     "@zag-js/dialog": "^0.2.6",
     "@zag-js/menu": "^0.3.3",
     "@zag-js/number-input": "^0.2.7",
