@@ -1,13 +1,13 @@
 import * as select from "@zag-js/select";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import { createMemo, createUniqueId, For, Show } from "solid-js";
-import { Portal } from "solid-js/web";
+// import { Portal } from "solid-js/web";
 
 interface SelectProps {
   label?: string;
   name: string;
   options: select.OptionProps[];
-  onChange?: (v: select.OptionProps) => void;
+  onChange?: (v: string) => void;
   value?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -20,7 +20,7 @@ export function Select(props: SelectProps) {
     select.machine({
       id: createUniqueId(),
       name: props.name,
-      onChange: props.onChange,
+      onChange: (v) => props.onChange(v.value),
       selectedOption: props.options?.find((o) => o.value === props.value),
       loop: true,
       selectOnTab: true,

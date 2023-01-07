@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import { Avatar, Badge, Tooltip } from "../../../components";
+import { Anchor, Avatar, Badge, Tooltip } from "../../../components";
 import { TableSkeleton } from "../../../components";
 import { PROJECT_STATUS_COLOR } from "../constant";
 import { ProjectWithMembers } from "../type";
@@ -91,9 +91,7 @@ export function ProjectTable(props: ProjectTableProps) {
                       </Badge>
                     </td>
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
-                      <a href="#" class="text-purple-600 hover:text-purple-900">
-                        Edit
-                      </a>
+                      <Anchor href={project.id}>Edit</Anchor>
                     </td>
                   </tr>
                 )}

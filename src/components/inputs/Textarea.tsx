@@ -47,7 +47,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
           placeholder={props.placeholder}
           autocomplete={props.autocomplete}
           aria-describedby="description"
-          rows={props.rows}
+          rows={props.rows || 8}
           cols={props.cols}
           required={props.required ?? false}
           value={props.value || ""}

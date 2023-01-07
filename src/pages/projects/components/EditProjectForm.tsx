@@ -7,15 +7,20 @@ import { ProjectStatus, projectStatusOptions } from "../constant";
 import { SELECT_PROJECT_WITH_MEMBER_QUERY } from "../projects";
 import { ProjectWithMembers } from "../type";
 
-interface CreateProjectFormProps {
+interface UpdateProjectFormProps {
   close(): void;
-  handleSetProjects: (newProject: ProjectWithMembers) => void;
+  defaultProject: ProjectWithMembers;
+  handleSetProject: (newProject: ProjectWithMembers) => void;
 }
 
-export function CreateProjectForm(props: CreateProjectFormProps) {
-  const [name, setName] = createSignal("");
-  const [description, setDescription] = createSignal("");
-  const [status, setStatus] = createSignal<ProjectStatus>("draft");
+export function UpdateProjectForm(props: UpdateProjectFormProps) {
+  const [name, setName] = createSignal(props.defaultProject.name);
+  const [description, setDescription] = createSignal(
+    props.defaultProject.description
+  );
+  const [status, setStatus] = createSignal<ProjectStatus>(
+    props.defaultProject.status
+  );
   const [loading, setLoading] = createSignal(false);
 
   const handleSubmit = async (e: Event) => {
@@ -26,14 +31,17 @@ export function CreateProjectForm(props: CreateProjectFormProps) {
 
       let { data, error } = await supabase
         .from("projects")
-        .insert({ name: name(), description: description(), status: status() })
-        .select(SELECT_PROJECT_WITH_MEMBER_QUERY);
+        .update({ name: name(), description: description(), status: status() })
+        .eq("id", props.defaultProject.id)
+        .select(SELECT_PROJECT_WITH_MEMBER_QUERY)
+        .single();
 
       if (error) {
         throw error;
       }
-      toast.success("New project created");
-      props.handleSetProjects(data[0] as ProjectWithMembers);
+
+      toast.success("Project updated");
+      props.handleSetProject(data as ProjectWithMembers);
       props.close();
     } catch (error) {
       if (error instanceof Error) {
@@ -71,7 +79,7 @@ export function CreateProjectForm(props: CreateProjectFormProps) {
       </div>
       <div class="mt-6 flex justify-end">
         <Button type="submit" loading={loading()}>
-          Submit
+          Save
         </Button>
       </div>
     </form>

@@ -6,7 +6,11 @@ export type ProjectMember =
   Database["public"]["Tables"]["project_members"]["Row"];
 
 export type MemberWithUser = ProjectMember & {
-  member: { id: string; full_name: string; avatar_url: string };
+  member: {
+    id: string;
+    full_name: string;
+    avatar_url: string;
+  };
 };
 
 export type ProjectWithMembers = Project & { members: MemberWithUser[] };

@@ -9,6 +9,7 @@ import { ProjectWithMembers } from "./type";
 
 export const SELECT_PROJECT_WITH_MEMBER_QUERY =
   "*, members:project_members(*, member:member_id(id, full_name, avatar_url))";
+
 interface ProjectsProps {
   // add props here
 }
@@ -27,7 +28,8 @@ function Projects(props: ProjectsProps) {
 
       let { data, error } = await supabase
         .from("projects")
-        .select(SELECT_PROJECT_WITH_MEMBER_QUERY);
+        .select(SELECT_PROJECT_WITH_MEMBER_QUERY)
+        .order("created_at");
 
       if (error) {
         throw error;

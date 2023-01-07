@@ -16,6 +16,7 @@ import Tasks from "./pages/tasks/tasks";
 import Workplans from "./pages/workplans/workplans";
 import Trackers from "./pages/trackers/trackers";
 import Users from "./pages/users/users";
+import ProjectDetail from "./pages/projects/project-detail";
 
 const Protected = () => {
   const [session, isInitialized] = useAuth();
@@ -70,6 +71,10 @@ const routes: RouteDefinition[] = [
       {
         path: "/projects",
         component: Projects,
+      },
+      {
+        path: "/projects/:id",
+        component: ProjectDetail,
       },
       {
         path: "/workplans",
