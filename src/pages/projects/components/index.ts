@@ -1,3 +1,4 @@
+export * from "./AddProjectMemberForm";
 export * from "./CreateProjectForm";
 export * from "./DeleteProjectForm";
 export * from "./EditProjectForm";

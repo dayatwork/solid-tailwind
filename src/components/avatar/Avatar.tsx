@@ -38,7 +38,7 @@ export function Avatar(props: AvatarProps) {
         height: props.size || "30px",
       }}
       class="max-w-none ring-2 ring-white object-cover rounded-full"
-      src={avatarUrl()}
+      src={avatarUrl() || `https://ui-avatars.com/api/?name=${props.alt}`}
       alt={props.alt ? props.alt : "No Image"}
     />
   );

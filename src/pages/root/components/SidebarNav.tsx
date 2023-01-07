@@ -51,10 +51,18 @@ interface NavItemProps {
 
 function NavItem(props: NavItemProps) {
   const location = useLocation();
-  const [active, setActive] = createSignal(location.pathname === props.href);
+  const [active, setActive] = createSignal(
+    props.href === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(props.href)
+  );
 
   createEffect(() => {
-    setActive(location.pathname === props.href);
+    setActive(
+      props.href === "/"
+        ? location.pathname === "/"
+        : location.pathname.startsWith(props.href)
+    );
   });
 
   return (

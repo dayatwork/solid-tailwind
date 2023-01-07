@@ -31,7 +31,7 @@ export function Select(props: SelectProps) {
   const api = createMemo(() => select.connect(state, send, normalizeProps));
 
   return (
-    <div>
+    <div class="w-full">
       <div class="select w-full">
         {/* Hidden select */}
         <select {...api().hiddenSelectProps}>
@@ -91,7 +91,7 @@ export function Select(props: SelectProps) {
         </div>
 
         {/* <Portal> */}
-        <div {...api().positionerProps}>
+        <div class="z-10" {...api().positionerProps}>
           <ul
             class="max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             {...api().contentProps}
@@ -150,6 +150,9 @@ export function Select(props: SelectProps) {
                 </li>
               )}
             </For>
+            <Show when={!props.options?.length}>
+              <p class="w-full px-10 py-1.5">No options</p>
+            </Show>
           </ul>
         </div>
         {/* </Portal> */}
