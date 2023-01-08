@@ -3,6 +3,8 @@ import toast from "solid-toast";
 
 import { Button, Select, TextInput } from "../../../components";
 import { supabase } from "../../../lib";
+import { useUsersDropdown } from "../../users/services";
+import { useAddProjectMember } from "../services";
 import { MemberWithUser } from "../type";
 
 export const SELECT__MEMBER_QUERY =
@@ -10,7 +12,7 @@ export const SELECT__MEMBER_QUERY =
 
 interface AddProjectMemberFormProps {
   close(): void;
-  handleSetMembers: (newProject: MemberWithUser) => void;
+  // handleSetMembers: (newProject: MemberWithUser) => void;
   projectId: string;
   members: MemberWithUser[];
 }
@@ -24,76 +26,85 @@ export function AddProjectMemberForm(props: AddProjectMemberFormProps) {
   const [memberId, setMemberId] = createSignal("");
   const [position, setPosition] = createSignal("");
   const [loading, setLoading] = createSignal(false);
-  const [employeeOptions, setEmployeeOptions] = createSignal<
-    EmployeeOption[] | null
-  >(null);
+  // const [employeeOptions, setEmployeeOptions] = createSignal<
+  //   EmployeeOption[] | null
+  // >(null);
+
+  const query = useUsersDropdown();
+  const mutation = useAddProjectMember({ onSuccess: () => props.close() });
 
   const filteredEmployeeOptions = () =>
-    employeeOptions()?.filter(
+    query.data?.filter(
       (emp) => !props.members.map((m) => m.member_id).includes(emp.value)
     ) || [];
 
-  onMount(() => {
-    getUsers();
-  });
+  // onMount(() => {
+  //   getUsers();
+  // });
 
-  const getUsers = async () => {
-    try {
-      setLoading(true);
+  // const getUsers = async () => {
+  //   try {
+  //     setLoading(true);
 
-      let { data, error } = await supabase
-        .from("profiles")
-        .select("id, full_name");
+  //     let { data, error } = await supabase
+  //       .from("profiles")
+  //       .select("id, full_name");
 
-      if (error) {
-        throw error;
-      }
+  //     if (error) {
+  //       throw error;
+  //     }
 
-      if (data) {
-        setEmployeeOptions(
-          data.map((item) => ({
-            label: item.full_name,
-            value: item.id,
-          }))
-        );
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (data) {
+  //       setEmployeeOptions(
+  //         data.map((item) => ({
+  //           label: item.full_name,
+  //           value: item.id,
+  //         }))
+  //       );
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       toast.error(error.message);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
 
-    try {
-      setLoading(true);
+    mutation.mutate({
+      project_id: props.projectId,
+      member_id: memberId(),
+      position: position(),
+    });
 
-      let { data, error } = await supabase
-        .from("project_members")
-        .insert({
-          project_id: props.projectId,
-          member_id: memberId(),
-          position: position(),
-        })
-        .select(SELECT__MEMBER_QUERY);
+    // try {
+    //   setLoading(true);
 
-      if (error) {
-        throw error;
-      }
-      toast.success("New member added");
-      props.handleSetMembers(data[0] as MemberWithUser);
-      props.close();
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    } finally {
-      setLoading(false);
-    }
+    //   let { data, error } = await supabase
+    //     .from("project_members")
+    //     .insert({
+    //       project_id: props.projectId,
+    //       member_id: memberId(),
+    //       position: position(),
+    //     })
+    //     .select(SELECT__MEMBER_QUERY);
+
+    //   if (error) {
+    //     throw error;
+    //   }
+    //   toast.success("New member added");
+    //   props.handleSetMembers(data[0] as MemberWithUser);
+    //   props.close();
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     alert(error.message);
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

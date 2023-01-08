@@ -1,8 +1,7 @@
 import { useNavigate } from "@solidjs/router";
 import { createSignal } from "solid-js";
-import toast from "solid-toast";
 
-import { supabase } from "../../../lib";
+import { useDeleteProject } from "../services";
 import { ProjectWithMembers } from "../type";
 
 interface DeleteProjectFormProps {
@@ -12,32 +11,14 @@ interface DeleteProjectFormProps {
 export function DeleteProjectForm(props: DeleteProjectFormProps) {
   const navigate = useNavigate();
   const [confirmationText, setConfirmationText] = createSignal("");
-  const [deleting, setDeleting] = createSignal(false);
   const confirm = () => confirmationText() == props.project.name;
+
+  const mutation = useDeleteProject({ onSuccess: () => navigate("/projects") });
 
   const handleDelete = async (e: Event) => {
     e.preventDefault();
 
-    try {
-      setDeleting(true);
-
-      let { error } = await supabase
-        .from("projects")
-        .delete()
-        .eq("id", props.project.id);
-
-      if (error) {
-        throw error;
-      }
-      toast.success("Project deleted");
-      navigate("/projects");
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    } finally {
-      setDeleting(false);
-    }
+    mutation.mutate(props.project.id);
   };
 
   return (
@@ -57,10 +38,10 @@ export function DeleteProjectForm(props: DeleteProjectFormProps) {
         />
         <button
           type="submit"
-          disabled={!confirm() || deleting()}
+          disabled={!confirm() || mutation.isLoading}
           class="mt-2 bg-red-500 text-sm font-medium text-white py-2 px-4 rounded-md disabled:bg-red-200 disabled:cursor-not-allowed"
         >
-          {deleting() ? "Deleting..." : "Delete"}
+          {mutation.isLoading ? "Deleting..." : "Delete"}
         </button>
       </form>
     </div>

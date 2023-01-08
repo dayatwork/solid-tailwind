@@ -1,67 +1,28 @@
 import { AuthSession } from "@supabase/supabase-js";
-import { createSignal, onMount } from "solid-js";
-import toast from "solid-toast";
 
 import { Dialog } from "../../../components";
 import { useAuth } from "../../../contexts";
-import { supabase } from "../../../lib";
 import { CreateProjectForm, ProjectList, ProjectTable } from "../components";
 import { MyProjects } from "../components";
-import { ProjectWithMembers } from "../type";
+import { useProjects } from "../services";
 
 export const SELECT_PROJECT_WITH_MEMBER_QUERY =
   "*, members:project_members(*, member:member_id(id, full_name, avatar_url))";
 
-interface ProjectsProps {
-  // add props here
-}
+interface ProjectsProps {}
 
 function Projects(props: ProjectsProps) {
-  const [loading, setLoading] = createSignal(false);
-  const [projects, setProjects] = createSignal<ProjectWithMembers[]>([]);
   const [session] = useAuth();
+  const query = useProjects();
 
   const myOngoingProjects = () => {
     const userId = (session() as AuthSession).user.id;
 
     if (!userId) return [];
 
-    return projects().filter((p) =>
+    return query.data.filter((p) =>
       p.members.map((m) => m.member_id).includes(userId)
     );
-  };
-
-  onMount(() => {
-    getProjects();
-  });
-
-  const getProjects = async () => {
-    try {
-      setLoading(true);
-
-      let { data, error } = await supabase
-        .from("projects")
-        .select(SELECT_PROJECT_WITH_MEMBER_QUERY)
-        .order("created_at");
-
-      if (error) {
-        throw error;
-      }
-
-      if (data) {
-        setProjects(data as ProjectWithMembers[]);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSetProject = (newProject: ProjectWithMembers) => {
-    setProjects([...projects(), newProject]);
   };
 
   return (
@@ -78,19 +39,28 @@ function Projects(props: ProjectsProps) {
             triggerClass="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:order-1 sm:ml-3"
             title="Create Project"
           >
-            {(api) => (
-              <CreateProjectForm
-                close={api.close}
-                handleSetProjects={handleSetProject}
-              />
-            )}
+            {(api) => <CreateProjectForm close={api.close} />}
           </Dialog>
         </div>
       </div>
 
-      <MyProjects projects={myOngoingProjects()} loading={loading()} />
-      <ProjectList projects={projects()} loading={loading()} />
-      <ProjectTable projects={projects()} loading={loading()} />
+      <MyProjects
+        // loading={loading()}
+        projects={myOngoingProjects()}
+        loading={query.isLoading}
+      />
+      <ProjectList
+        // projects={projects()}
+        // loading={loading()}
+        projects={query.data}
+        loading={query.isLoading}
+      />
+      <ProjectTable
+        // projects={projects()}
+        // loading={loading()}
+        projects={query.data}
+        loading={query.isLoading}
+      />
     </>
   );
 }

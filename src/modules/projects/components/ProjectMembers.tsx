@@ -1,11 +1,10 @@
 import { A } from "@solidjs/router";
 import { HiSolidPencil, HiSolidTrash, HiSolidX } from "solid-icons/hi";
 import { createSignal, For, Match, Show, Switch } from "solid-js";
-import toast from "solid-toast";
 
 import { Avatar, Dialog } from "../../../components";
-import { supabase } from "../../../lib";
-import { MemberWithUser, ProjectWithMembers } from "../type";
+import { useDeleteProjectMember } from "../services";
+import { ProjectWithMembers } from "../type";
 import { AddProjectMemberForm } from "./AddProjectMemberForm";
 
 interface ProjectMembersProps {
@@ -14,14 +13,9 @@ interface ProjectMembersProps {
 
 export function ProjectMembers(props: ProjectMembersProps) {
   const [isEditMode, setIsEditMode] = createSignal(false);
-  const [members, setMembers] = createSignal<MemberWithUser[]>(
-    props.project.members
-  );
   const [deletingItem, setDeletingItem] = createSignal("");
 
-  const handleSetMember = (member: MemberWithUser) => {
-    setMembers([...members(), member]);
-  };
+  const mutation = useDeleteProjectMember();
 
   const openEditMode = () => {
     setIsEditMode(true);
@@ -31,26 +25,16 @@ export function ProjectMembers(props: ProjectMembersProps) {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      setDeletingItem(id);
-      const { error } = await supabase
-        .from("project_members")
-        .delete()
-        .eq("id", id);
-
-      if (error) {
-        throw error;
-      }
-
-      setMembers([...members().filter((m) => m.id !== id)]);
-      setIsEditMode(false);
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
-      setDeletingItem("");
-    }
+    setDeletingItem(id);
+    mutation.mutate(id, {
+      onSuccess: () => {
+        setIsEditMode(false);
+        setDeletingItem("");
+      },
+      onError: () => {
+        setDeletingItem("");
+      },
+    });
   };
 
   return (
@@ -79,7 +63,7 @@ export function ProjectMembers(props: ProjectMembersProps) {
         </Switch>
       </div>
       <ul role="list" class="mt-3 space-y-3 mb-3">
-        <For each={members()}>
+        <For each={props.project.members}>
           {(member) => (
             <li class="flex justify-between">
               <A
@@ -129,9 +113,8 @@ export function ProjectMembers(props: ProjectMembersProps) {
         {(api) => (
           <AddProjectMemberForm
             close={api.close}
-            handleSetMembers={handleSetMember}
             projectId={props.project.id}
-            members={members()}
+            members={props.project.members}
           />
         )}
       </Dialog>

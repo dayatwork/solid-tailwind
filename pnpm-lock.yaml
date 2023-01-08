@@ -5,6 +5,7 @@ specifiers:
   '@solidjs/router': ^0.6.0
   '@supabase/supabase-js': ^2.2.3
   '@tailwindcss/forms': ^0.5.3
+  '@tanstack/solid-query': ^4.20.9
   '@zag-js/dialog': ^0.2.6
   '@zag-js/menu': ^0.3.3
   '@zag-js/number-input': ^0.2.7
@@ -25,6 +26,7 @@ dependencies:
   '@motionone/solid': 10.15.4_solid-js@1.6.6
   '@solidjs/router': 0.6.0_solid-js@1.6.6
   '@supabase/supabase-js': 2.2.3
+  '@tanstack/solid-query': 4.20.9_solid-js@1.6.6
   '@zag-js/dialog': 0.2.6
   '@zag-js/menu': 0.3.3
   '@zag-js/number-input': 0.2.7
@@ -775,6 +777,19 @@ packages:
       mini-svg-data-uri: 1.4.4
       tailwindcss: 3.2.4_postcss@8.4.20
     dev: true
+
+  /@tanstack/query-core/4.20.9:
+    resolution: {integrity: sha512-XTEEvOGy7wlABPTYfmg7U287WYcf2PV8lH15oKWD2I09okqMOHrB23WxyikEVRwJCjYNKcCW0BuYaAY4S2g/jg==}
+    dev: false
+
+  /@tanstack/solid-query/4.20.9_solid-js@1.6.6:
+    resolution: {integrity: sha512-A27K9myMrtcN+sUHmCTcX6SUf3TlQv+OsnC4hep4V0gVfB+44lloC1uZAIM7CT6WPkebqiyQ1toTl3P+/xs1EQ==}
+    peerDependencies:
+      solid-js: ^1.5.7
+    dependencies:
+      '@tanstack/query-core': 4.20.9
+      solid-js: 1.6.6
+    dev: false
 
   /@types/phoenix/1.5.4:
     resolution: {integrity: sha512-L5eZmzw89eXBKkiqVBcJfU1QGx9y+wurRIEgt0cuLH0hwNtVUxtx+6cu0R2STwWj468sjXyBYPYDtGclUd1kjQ==}
