@@ -1,7 +1,7 @@
 import { HiSolidCalendar } from "solid-icons/hi";
 import { Badge } from "../../../components";
 import { formatDate } from "../../../utils/date";
-import { PROJECT_STATUS_COLOR } from "../constant";
+import { PROJECT_STATUS } from "../constant";
 import { ProjectWithMembers } from "../type";
 
 interface ProjectInfoProps {
@@ -12,7 +12,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
   return (
     <>
       <div class="mt-1 flex items-center space-x-2 -ml-1.5">
-        <Badge color={PROJECT_STATUS_COLOR[props.project.status]}>
+        <Badge color={PROJECT_STATUS[props.project.status].color}>
           {props.project.status}
         </Badge>
       </div>

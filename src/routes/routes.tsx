@@ -13,6 +13,7 @@ import Trackers from "../modules/trackers/pages/trackers";
 import Users from "../modules/users/pages/users";
 import Workplans from "../modules/workplans/pages/workplans";
 import NotFound from "./404";
+import WorkplanDetail from "../modules/workplans/pages/workplan-detail";
 
 export const routes: RouteDefinition[] = [
   {
@@ -34,6 +35,10 @@ export const routes: RouteDefinition[] = [
       {
         path: "/workplans",
         component: Workplans,
+      },
+      {
+        path: "/workplans/:id",
+        component: WorkplanDetail,
       },
       {
         path: "/tasks",

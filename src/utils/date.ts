@@ -17,3 +17,13 @@ export const formatDate = (
     }
   );
 };
+
+const currentDate = new Date();
+const year = new Date(currentDate.getFullYear(), 0, 1);
+export const CURRENT_YEAR = currentDate.getFullYear();
+export const CURRENT_DAY = Math.floor(
+  (currentDate.getTime() - year.getTime()) / (24 * 60 * 60 * 1000)
+);
+export const CURRENT_WEEK = Math.ceil(
+  (currentDate.getDay() + 1 + CURRENT_DAY) / 7
+);

@@ -7,7 +7,7 @@ import toast from "solid-toast";
 
 import { supabase } from "../../../lib";
 import { Database } from "../../../lib/supabase/schema";
-import { PROJECT_STATUS } from "../constant";
+import { ProjectStatus } from "../type";
 
 // ========================
 // ======== Types =========
@@ -23,7 +23,6 @@ type MemberWithUser = ProjectMember & {
 };
 
 export type ProjectWithMembers = Project & { members: MemberWithUser[] };
-export type ProjectStatus = typeof PROJECT_STATUS[number];
 
 // ===================================
 // ======== Supabase Queries =========
@@ -53,7 +52,7 @@ export const getProjects = async () => {
   return data as ProjectWithMembers[];
 };
 
-// ******* Get Projects *******
+// ******* Get Project *******
 export const getProject = async (id: string) => {
   let { data, error } = await supabase
     .from("projects")

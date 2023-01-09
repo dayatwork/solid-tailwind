@@ -1,27 +1,45 @@
 import { AppColor } from "../../components";
-import { capitalize } from "../../utils/string";
+import { ProjectStatus } from "./type";
 
-export const PROJECT_STATUS = [
-  "draft",
-  "planning",
-  "ongoing",
-  "done",
-  "canceled",
-  "pending",
-] as const;
-
-export type ProjectStatus = typeof PROJECT_STATUS[number];
-
-export const PROJECT_STATUS_COLOR: Record<ProjectStatus, AppColor> = {
-  draft: "gray",
-  planning: "blue",
-  ongoing: "green",
-  done: "purple",
-  canceled: "red",
-  pending: "yellow",
+export const PROJECT_STATUS: Record<
+  ProjectStatus,
+  { label: string; value: ProjectStatus; color: AppColor }
+> = {
+  draft: {
+    label: "Draft",
+    color: "gray",
+    value: "draft",
+  },
+  planning: {
+    label: "Planning",
+    color: "blue",
+    value: "planning",
+  },
+  ongoing: {
+    label: "Ongoing",
+    color: "green",
+    value: "ongoing",
+  },
+  done: {
+    label: "Done",
+    color: "purple",
+    value: "done",
+  },
+  canceled: {
+    label: "Canceled",
+    color: "red",
+    value: "canceled",
+  },
+  pending: {
+    label: "Pending",
+    color: "yellow",
+    value: "pending",
+  },
 };
 
-export const projectStatusOptions = PROJECT_STATUS.map((v) => ({
-  label: capitalize(v),
-  value: v,
-}));
+export const projectStatusOptions = Object.keys(PROJECT_STATUS).map(
+  (v: ProjectStatus) => ({
+    label: PROJECT_STATUS[v].label,
+    value: v,
+  })
+);

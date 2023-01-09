@@ -1,6 +1,8 @@
 import { A } from "@solidjs/router";
 import { HiSolidChevronRight } from "solid-icons/hi";
 import { For, Show } from "solid-js";
+import { Dot } from "../../../components";
+import { PROJECT_STATUS } from "../constant";
 import { Project } from "../type";
 
 interface ProjectListProps {
@@ -27,10 +29,7 @@ export function ProjectList(props: ProjectListProps) {
                   class="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6"
                 >
                   <span class="flex items-center space-x-3 truncate">
-                    <span
-                      class="w-2.5 h-2.5 flex-shrink-0 rounded-full bg-pink-600"
-                      aria-hidden="true"
-                    ></span>
+                    <Dot color={PROJECT_STATUS[project.status].color} />
                     <span class="truncate text-sm font-medium leading-6">
                       {project.name}
                       <span class="ml-1 truncate font-normal text-gray-500">

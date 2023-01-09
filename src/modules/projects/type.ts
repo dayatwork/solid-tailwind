@@ -1,5 +1,6 @@
 import { Database } from "../../lib/supabase/schema";
 
+export type ProjectStatus = Database["public"]["Enums"]["project_status"];
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type Project = Database["public"]["Tables"]["projects"]["Row"];

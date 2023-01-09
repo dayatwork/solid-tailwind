@@ -6,9 +6,6 @@ import { CreateProjectForm, ProjectList, ProjectTable } from "../components";
 import { MyProjects } from "../components";
 import { useProjects } from "../services";
 
-export const SELECT_PROJECT_WITH_MEMBER_QUERY =
-  "*, members:project_members(*, member:member_id(id, full_name, avatar_url))";
-
 interface ProjectsProps {}
 
 function Projects(props: ProjectsProps) {
