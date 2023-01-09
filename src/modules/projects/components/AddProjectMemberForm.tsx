@@ -1,34 +1,19 @@
-import { createSignal, onMount } from "solid-js";
-import toast from "solid-toast";
+import { createSignal } from "solid-js";
 
 import { Button, Select, TextInput } from "../../../components";
-import { supabase } from "../../../lib";
 import { useUsersDropdown } from "../../users/services";
 import { useAddProjectMember } from "../services";
 import { MemberWithUser } from "../type";
 
-export const SELECT__MEMBER_QUERY =
-  "*, member:member_id(id, full_name, avatar_url)";
-
 interface AddProjectMemberFormProps {
   close(): void;
-  // handleSetMembers: (newProject: MemberWithUser) => void;
   projectId: string;
   members: MemberWithUser[];
 }
 
-type EmployeeOption = {
-  label: string;
-  value: string;
-};
-
 export function AddProjectMemberForm(props: AddProjectMemberFormProps) {
   const [memberId, setMemberId] = createSignal("");
   const [position, setPosition] = createSignal("");
-  const [loading, setLoading] = createSignal(false);
-  // const [employeeOptions, setEmployeeOptions] = createSignal<
-  //   EmployeeOption[] | null
-  // >(null);
 
   const query = useUsersDropdown();
   const mutation = useAddProjectMember({ onSuccess: () => props.close() });
@@ -38,39 +23,6 @@ export function AddProjectMemberForm(props: AddProjectMemberFormProps) {
       (emp) => !props.members.map((m) => m.member_id).includes(emp.value)
     ) || [];
 
-  // onMount(() => {
-  //   getUsers();
-  // });
-
-  // const getUsers = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     let { data, error } = await supabase
-  //       .from("profiles")
-  //       .select("id, full_name");
-
-  //     if (error) {
-  //       throw error;
-  //     }
-
-  //     if (data) {
-  //       setEmployeeOptions(
-  //         data.map((item) => ({
-  //           label: item.full_name,
-  //           value: item.id,
-  //         }))
-  //       );
-  //     }
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       toast.error(error.message);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
 
@@ -79,32 +31,6 @@ export function AddProjectMemberForm(props: AddProjectMemberFormProps) {
       member_id: memberId(),
       position: position(),
     });
-
-    // try {
-    //   setLoading(true);
-
-    //   let { data, error } = await supabase
-    //     .from("project_members")
-    //     .insert({
-    //       project_id: props.projectId,
-    //       member_id: memberId(),
-    //       position: position(),
-    //     })
-    //     .select(SELECT__MEMBER_QUERY);
-
-    //   if (error) {
-    //     throw error;
-    //   }
-    //   toast.success("New member added");
-    //   props.handleSetMembers(data[0] as MemberWithUser);
-    //   props.close();
-    // } catch (error) {
-    //   if (error instanceof Error) {
-    //     alert(error.message);
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -125,7 +51,7 @@ export function AddProjectMemberForm(props: AddProjectMemberFormProps) {
         />
       </div>
       <div class="mt-6 flex justify-end">
-        <Button type="submit" loading={loading()}>
+        <Button type="submit" loading={mutation.isLoading}>
           Submit
         </Button>
       </div>

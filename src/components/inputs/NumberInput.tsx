@@ -16,6 +16,8 @@ interface NumberInputProps {
   allowMouseWheel?: boolean;
   onChange?: (v: number) => void;
   value?: number;
+  readonly?: boolean;
+  ref?: HTMLInputElement;
 }
 
 export function NumberInput(props: NumberInputProps) {
@@ -30,6 +32,7 @@ export function NumberInput(props: NumberInputProps) {
       minFractionDigits: props.minFractionDigits,
       onChange: (v) => props.onChange(v.valueAsNumber),
       value: props.value && String(props.value),
+      readOnly: props.readonly,
     })
   );
 
@@ -47,27 +50,30 @@ export function NumberInput(props: NumberInputProps) {
       </label>
       <div class="relative mt-1 rounded-md shadow-sm">
         <input
-          class={`block w-full rounded-md sm:text-sm focus:outline-none ${
+          ref={props.ref}
+          class={`block w-full rounded-md sm:text-sm focus:outline-none disabled:bg-gray-200 disabled:text-gray-600 ${
             !props.error
               ? "pr-10 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
               : "border-red-300 focus:border-red-500 focus:ring-red-500"
           }`}
           {...api().inputProps}
         />
-        <div class="absolute inset-y-0 right-0 flex flex-col rounded-md p-[1px]">
-          <button
-            class="w-7 bg-gray-100 hover:bg-gray-200 h-[50%] inline-flex justify-center items-center rounded-tr-md border-b border-b-gray-300"
-            {...api().incrementTriggerProps}
-          >
-            <HiOutlineChevronUp />
-          </button>
-          <button
-            class="w-7 bg-gray-100 hover:bg-gray-200 h-[50%] inline-flex justify-center items-center rounded-br-md"
-            {...api().decrementTriggerProps}
-          >
-            <HiOutlineChevronDown />
-          </button>
-        </div>
+        <Show when={!props.readonly && !props.disabled}>
+          <div class="absolute inset-y-0 right-0 flex flex-col rounded-md p-[1px]">
+            <button
+              class="w-7 bg-gray-100 hover:bg-gray-200 h-[50%] inline-flex justify-center items-center rounded-tr-md border-b border-b-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-100"
+              {...api().incrementTriggerProps}
+            >
+              <HiOutlineChevronUp />
+            </button>
+            <button
+              class="w-7 bg-gray-100 hover:bg-gray-200 h-[50%] inline-flex justify-center items-center rounded-br-md disabled:text-gray-500 disabled:hover:bg-gray-100"
+              {...api().decrementTriggerProps}
+            >
+              <HiOutlineChevronDown />
+            </button>
+          </div>
+        </Show>
       </div>
       <Show when={props.error}>
         <p class="mt-1 text-sm text-red-600" id="description">

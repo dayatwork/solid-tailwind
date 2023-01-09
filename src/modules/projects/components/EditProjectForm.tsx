@@ -1,9 +1,9 @@
 import { createSignal } from "solid-js";
 
 import { Button, Select, Textarea, TextInput } from "../../../components";
-import { ProjectStatus, projectStatusOptions } from "../constant";
+import { projectStatusOptions } from "../constant";
 import { useUpdateProject } from "../services";
-import { ProjectWithMembers } from "../type";
+import { ProjectStatus, ProjectWithMembers } from "../type";
 
 interface UpdateProjectFormProps {
   close(): void;

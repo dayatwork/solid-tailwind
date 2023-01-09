@@ -268,9 +268,10 @@ export interface Database {
           description: string | null
           week: number
           year: number
+          status: Database["public"]["Enums"]["workplan_status"]
         }
         Insert: {
-          id: string
+          id?: string
           created_at?: string
           updated_at?: string
           employee_id: string
@@ -278,6 +279,7 @@ export interface Database {
           description?: string | null
           week: number
           year: number
+          status?: Database["public"]["Enums"]["workplan_status"]
         }
         Update: {
           id?: string
@@ -288,6 +290,7 @@ export interface Database {
           description?: string | null
           week?: number
           year?: number
+          status?: Database["public"]["Enums"]["workplan_status"]
         }
       }
     }
@@ -307,7 +310,12 @@ export interface Database {
         | "pending"
       report_attachment_type: "storage" | "url"
       task_status: "assigned" | "ongoing" | "completed" | "checked"
-      workplan_status: "planned" | "approved" | "rejected" | "postponed"
+      workplan_status:
+        | "planned"
+        | "approved"
+        | "rejected"
+        | "picked"
+        | "postponed"
     }
   }
 }
