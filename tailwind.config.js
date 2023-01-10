@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: [
     "./index.html",
@@ -6,7 +9,12 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+        mono: ["Chivo Mono", ...defaultTheme.fontFamily.mono],
+      },
+    },
   },
   plugins: [require("@tailwindcss/forms")],
 };

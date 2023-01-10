@@ -1,5 +1,6 @@
 import { useNavigate } from "@solidjs/router";
 import { createSignal } from "solid-js";
+import { Button } from "../../../components";
 
 import { useDeleteWorkplan, Workplan } from "../services";
 
@@ -33,17 +34,18 @@ export function DeleteWorkplanForm(props: DeleteWorkplanFormProps) {
         <input
           aria-label="Confirmation Text"
           type="text"
-          class="mt-0.5 block rounded-md sm:text-sm focus:outline-none border-gray-300 focus:border-red-500 focus:ring-red-500 w-full max-w-[300px]"
+          class="mt-0.5 mb-2.5 block rounded-md sm:text-sm focus:outline-none border-gray-300 focus:border-red-500 focus:ring-red-500 w-full max-w-[300px]"
           value={confirmationText()}
           onInput={(e) => setConfirmationText(e.currentTarget.value)}
         />
-        <button
+        <Button
+          variant="danger"
           type="submit"
-          disabled={!confirm() || mutation.isLoading}
-          class="mt-2 bg-red-500 text-sm font-medium text-white py-2 px-4 rounded-md disabled:bg-red-200 disabled:cursor-not-allowed"
+          disabled={!confirm()}
+          loading={mutation.isLoading}
         >
-          {mutation.isLoading ? "Deleting..." : "Delete"}
-        </button>
+          Delete
+        </Button>
       </form>
     </div>
   );

@@ -43,14 +43,14 @@ export function Select(props: SelectProps) {
         {/* Custom Select */}
         <div class="control">
           <label
-            class="block text-sm font-medium text-gray-700"
+            class="block mb-1 text-sm font-medium text-gray-700"
             {...api().labelProps}
           >
             {props.label}
           </label>
           <button
             type="button"
-            class={`relative mt-1 w-full cursor-default rounded-md border bg-white py-2 pl-3 pr-10 text-left shadow-sm  focus:outline-none focus:ring-1 sm:text-sm ${
+            class={`relative w-full cursor-default rounded-md border bg-white py-2 pl-3 pr-10 text-left shadow-sm  focus:outline-none focus:ring-1 sm:text-sm ${
               !props.error
                 ? "border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 : "border-red-300 focus:border-red-500 focus:ring-red-500"
@@ -115,7 +115,7 @@ export function Select(props: SelectProps) {
                   })}
                 >
                   <span
-                    class={`block truncate ${
+                    class={`block truncate text-left ${
                       api().selectedOption?.value === option.value
                         ? "font-semibold"
                         : "font-normal"
