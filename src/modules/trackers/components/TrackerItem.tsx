@@ -31,8 +31,10 @@ function TrackerItem(props: TrackerItemProps) {
         </div>
       </div>
       <div class="w-60 hidden whitespace-nowrap px-2 py-3 text-sm text-gray-900 md:table-cell">
-        <p class="font-medium truncate">{props.tracker.task.task}</p>
-        <p class="text-gray-500">(Target: {props.tracker.task.target}%)</p>
+        <Show when={props.tracker.task} fallback={<p>No task selected</p>}>
+          <p class="font-medium truncate">{props.tracker.task.task}</p>
+          <p class="text-gray-500">(Target: {props.tracker.task.target}%)</p>
+        </Show>
       </div>
       <div class="w-20 hidden whitespace-nowrap px-4 py-3 mr-4 text-lg font-medium text-green-600 md:table-cell">
         +{props.tracker.value}%

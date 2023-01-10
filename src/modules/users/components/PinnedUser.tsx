@@ -52,7 +52,7 @@ export function PinnedUser(props: PinnedUserProps) {
                     From: "transform opacity-100 scale-100"
                     To: "transform opacity-0 scale-95"
                 --> */}
-              <div
+              {/* <div
                 class="absolute right-10 top-3 z-10 mx-3 mt-1 w-48 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 role="menu"
                 aria-orientation="vertical"
@@ -60,7 +60,7 @@ export function PinnedUser(props: PinnedUserProps) {
                 tabindex="-1"
               >
                 <div class="py-1" role="none">
-                  {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
+                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                   <a
                     href="#"
                     class="text-gray-700 block px-4 py-2 text-sm"
@@ -91,7 +91,7 @@ export function PinnedUser(props: PinnedUserProps) {
                     Share
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </li>

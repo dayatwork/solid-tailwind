@@ -11,7 +11,7 @@ interface UserTableProps {
 
 export function UserTable(props: UserTableProps) {
   return (
-    <div class="mt-8 hidden sm:block">
+    <div class="hidden sm:block">
       <div class="inline-block min-w-full border-b border-gray-200 align-middle">
         <table class="min-w-full">
           <thead>

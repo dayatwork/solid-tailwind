@@ -30,11 +30,51 @@ export const TRACKERS_KEY = "task_trackers";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Trackers *******
-export const getTrackers = async () => {
-  let { data, error } = await supabase
+interface GetTrackersParams {
+  task_id?: string;
+  employee_id?: string;
+  start_at_from?: string;
+  start_at_to?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getTrackers = async (params: GetTrackersParams) => {
+  const {
+    task_id,
+    employee_id,
+    start_at_from,
+    start_at_to,
+    limit = 10,
+    page = 1,
+  } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("task_trackers")
     .select(SELECT_TRACKER_WITH_TASK_QUERY)
-    .order("start_at", { ascending: false });
+    .order("start_at", { ascending: false })
+    .range(from, to);
+
+  if (task_id) {
+    query = query.eq("task_id", task_id);
+  }
+
+  if (employee_id) {
+    query = query.eq("employee_id", employee_id);
+  }
+
+  if (start_at_from) {
+    query = query.gte("start_at", start_at_from);
+  }
+
+  if (start_at_to) {
+    query = query.lte("start_at", start_at_to);
+  }
+
+  let { data, error } = await query;
 
   if (error) {
     throw error;
@@ -163,10 +203,14 @@ export const deleteTracker = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Trackers Query  *******
-export const useTrackers = () => {
-  return createQuery(() => [TRACKERS_KEY], getTrackers, {
-    staleTime: Infinity,
-  });
+export const useTrackers = (params: GetTrackersParams) => {
+  return createQuery(
+    () => [TRACKERS_KEY, params],
+    () => getTrackers(params),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Tracker Query  *******

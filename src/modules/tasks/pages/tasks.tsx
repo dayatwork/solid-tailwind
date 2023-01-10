@@ -1,21 +1,39 @@
-import { createEffect } from "solid-js";
-import { Dialog } from "../../../components";
+import { useSearchParams } from "@solidjs/router";
+import { Dialog, Select, SimplePagination } from "../../../components";
+import SearchInput from "../../../components/inputs/SearchInput";
 import {
   CreateTaskForm,
   OngoingTasks,
   TaskList,
   TaskTable,
-  // ApprovedWorkplans,
-  // CreateWorkplanForm,
 } from "../components";
+import { taskStatusOptions, TASK_STATUS } from "../constant";
 import { useTasks } from "../services";
+import { TaskStatus } from "../type";
 
 interface TasksProps {}
 
 function Tasks(props: TasksProps) {
-  const query = useTasks();
+  const [searchParams, setSearchParams] = useSearchParams<{
+    page: string;
+    limit: string;
+    status: string;
+    search: string;
+  }>();
 
-  const ongoingTasks = () => query.data.filter((t) => t.status === "ongoing");
+  const params = () => ({
+    page: Number(searchParams.page) || 1,
+    limit: Number(searchParams.limit) || 5,
+    task: searchParams.search || undefined,
+    status: Object.keys(TASK_STATUS).includes(searchParams.status)
+      ? (searchParams.status as TaskStatus)
+      : undefined,
+  });
+
+  const query = useTasks(params);
+
+  const ongoingTasks = () =>
+    query.data.tasks.filter((t) => t.status === "ongoing");
 
   return (
     <>
@@ -36,9 +54,38 @@ function Tasks(props: TasksProps) {
         </div>
       </div>
       <OngoingTasks tasks={ongoingTasks()} loading={query.isLoading} />
-
-      <TaskList tasks={query.data} loading={query.isLoading} />
-      <TaskTable tasks={query.data} loading={query.isLoading} />
+      <div class="mt-8 bg-white pl-4 sm:pl-8 pr-4 py-2 border-t border-gray-200 flex items-center justify-between gap-2 w-full">
+        <SearchInput
+          onChange={(e) => setSearchParams({ search: e.currentTarget.value })}
+        />
+        <div>
+          <Select
+            name="status"
+            placeholder="Select Status"
+            options={[{ label: "All", value: "" }, ...taskStatusOptions]}
+            value={params().status || ""}
+            onChange={(v) => setSearchParams({ status: v })}
+            width={150}
+          />
+        </div>
+      </div>
+      <TaskList tasks={query.data.tasks} loading={query.isLoading} />
+      <TaskTable tasks={query.data.tasks} loading={query.isLoading} />
+      <div class="bg-white px-4 sm:pl-8 sm:pr-6 py-2 border-b border-gray-200">
+        <SimplePagination
+          loading={query.isLoading}
+          limit={searchParams.limit || "10"}
+          page={searchParams.page || "1"}
+          count={query.data.count}
+          onChangeLimit={(v) => setSearchParams({ limit: v, page: "1" })}
+          onNext={() =>
+            setSearchParams({ page: (Number(searchParams.page) || 1) + 1 })
+          }
+          onPrev={() =>
+            setSearchParams({ page: (Number(searchParams.page) || 1) - 1 })
+          }
+        />
+      </div>
     </>
   );
 }

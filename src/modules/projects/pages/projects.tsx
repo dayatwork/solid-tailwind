@@ -1,23 +1,45 @@
+import { useSearchParams } from "@solidjs/router";
 import { AuthSession } from "@supabase/supabase-js";
+import { HiSolidSearch } from "solid-icons/hi";
+import { createEffect } from "solid-js";
 
-import { Dialog } from "../../../components";
+import { Dialog, Select, SimplePagination } from "../../../components";
+import SearchInput from "../../../components/inputs/SearchInput";
 import { useAuth } from "../../../contexts";
 import { CreateProjectForm, ProjectList, ProjectTable } from "../components";
 import { MyProjects } from "../components";
+import { projectStatusOptions, PROJECT_STATUS } from "../constant";
 import { useProjects } from "../services";
+import { ProjectStatus } from "../type";
 
 interface ProjectsProps {}
 
 function Projects(props: ProjectsProps) {
   const [session] = useAuth();
-  const query = useProjects();
+  const [searchParams, setSearchParams] = useSearchParams<{
+    page: string;
+    limit: string;
+    status: string;
+    search: string;
+  }>();
+
+  const params = () => ({
+    page: Number(searchParams.page) || 1,
+    limit: Number(searchParams.limit) || 5,
+    name: searchParams.search || undefined,
+    status: Object.keys(PROJECT_STATUS).includes(searchParams.status)
+      ? (searchParams.status as ProjectStatus)
+      : undefined,
+  });
+
+  const query = useProjects(params);
 
   const myOngoingProjects = () => {
     const userId = (session() as AuthSession).user.id;
 
     if (!userId) return [];
 
-    return query.data.filter((p) =>
+    return query.data.projects.filter((p) =>
       p.members.map((m) => m.member_id).includes(userId)
     );
   };
@@ -41,23 +63,43 @@ function Projects(props: ProjectsProps) {
         </div>
       </div>
 
-      <MyProjects
-        // loading={loading()}
-        projects={myOngoingProjects()}
-        loading={query.isLoading}
-      />
-      <ProjectList
-        // projects={projects()}
-        // loading={loading()}
-        projects={query.data}
-        loading={query.isLoading}
-      />
-      <ProjectTable
-        // projects={projects()}
-        // loading={loading()}
-        projects={query.data}
-        loading={query.isLoading}
-      />
+      <MyProjects projects={myOngoingProjects()} loading={query.isLoading} />
+
+      <div class="mt-8 bg-white pl-4 sm:pl-8 pr-4 py-2 border-t border-gray-200 flex items-center justify-between gap-2 w-full">
+        <SearchInput
+          onChange={(e) => setSearchParams({ search: e.currentTarget.value })}
+        />
+        <div>
+          <Select
+            name="status"
+            placeholder="Select Status"
+            options={[{ label: "All", value: "" }, ...projectStatusOptions]}
+            value={params().status || ""}
+            onChange={(v) => setSearchParams({ status: v })}
+            width={150}
+          />
+        </div>
+      </div>
+
+      <ProjectList projects={query.data.projects} loading={query.isLoading} />
+
+      <ProjectTable projects={query.data.projects} loading={query.isLoading} />
+
+      <div class="bg-white px-4 sm:pl-8 sm:pr-6 py-2 border-b border-gray-200">
+        <SimplePagination
+          loading={query.isLoading}
+          limit={searchParams.limit || "10"}
+          page={searchParams.page || "1"}
+          count={query.data.count}
+          onChangeLimit={(v) => setSearchParams({ limit: v, page: "1" })}
+          onNext={() =>
+            setSearchParams({ page: (Number(searchParams.page) || 1) + 1 })
+          }
+          onPrev={() =>
+            setSearchParams({ page: (Number(searchParams.page) || 1) - 1 })
+          }
+        />
+      </div>
     </>
   );
 }

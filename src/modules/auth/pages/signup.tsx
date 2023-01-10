@@ -5,9 +5,7 @@ import { Anchor, Button, Divider, TextInput } from "../../../components";
 import OAuthButton from "../../../components/button/OAuthButton";
 import { supabase } from "../../../lib";
 
-interface SignupProps {
-  // add props here
-}
+interface SignupProps {}
 
 function Signup(props: SignupProps) {
   const [name, setName] = createSignal("");

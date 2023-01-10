@@ -1,7 +1,6 @@
 import { A } from "@solidjs/router";
 import { HiSolidChevronRight } from "solid-icons/hi";
-import { JSX, Match, Show, Switch } from "solid-js";
-import { For } from "solid-js";
+import { Show, For } from "solid-js";
 
 import { CardStatus } from "../../../components";
 import { TASK_STATUS } from "../constant";

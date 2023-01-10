@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router";
 import { HiSolidChevronRight } from "solid-icons/hi";
 import { For, Show } from "solid-js";
+
 import { Dot } from "../../../components";
 import { PROJECT_STATUS } from "../constant";
 import { Project } from "../type";

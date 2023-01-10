@@ -37,17 +37,63 @@ export const TASKS_KEY = "tasks";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Tasks *******
-export const getTasks = async () => {
-  let { data, error } = await supabase
+interface GetTasksParams {
+  status?: TaskStatus;
+  assignee_id?: string;
+  assignor_id?: string;
+  workplan_id?: string;
+  task?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getTasks = async (params: GetTasksParams) => {
+  const {
+    status,
+    assignee_id,
+    assignor_id,
+    workplan_id,
+    task,
+    limit = 10,
+    page = 1,
+  } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("tasks")
-    .select(SELECT_TASK_WITH_ASSIGNOR)
-    .order("created_at");
+    .select(SELECT_TASK_WITH_ASSIGNOR, { count: "exact" })
+    .order("created_at")
+    .range(from, to);
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  if (assignee_id) {
+    query = query.eq("assignee_id", assignee_id);
+  }
+
+  if (assignor_id) {
+    query = query.eq("assignor_id", assignor_id);
+  }
+
+  if (workplan_id) {
+    query = query.eq("workplan_id", workplan_id);
+  }
+
+  if (task) {
+    query = query.ilike("task", `%${task}%`);
+  }
+
+  let { data, error, count } = await query;
 
   if (error) {
     throw error;
   }
 
-  return data as TaskWithAssignor[];
+  return { count, tasks: data } as { count: number; tasks: TaskWithAssignor[] };
 };
 
 // ******* Get Task *******
@@ -123,10 +169,14 @@ export const deleteTask = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Tasks Query  *******
-export const useTasks = () => {
-  return createQuery(() => [TASKS_KEY], getTasks, {
-    staleTime: Infinity,
-  });
+export const useTasks = (params: () => GetTasksParams) => {
+  return createQuery(
+    () => [TASKS_KEY, params()],
+    () => getTasks(params()),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Task Query  *******

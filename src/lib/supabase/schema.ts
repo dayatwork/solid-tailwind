@@ -156,7 +156,7 @@ export interface Database {
           checked_by?: string | null
           created_at?: string
           employee_id: string
-          id: string
+          id?: string
           report: string
           task_id: string
           updated_at?: string

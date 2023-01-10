@@ -4,13 +4,7 @@ import { TbTarget } from "solid-icons/tb";
 import { Match, Show, Switch } from "solid-js";
 
 import { Badge, Dialog, Loader } from "../../../components";
-import // DeleteProjectForm,
-// ProjectInfo,
-// ProjectMembers,
-// UpdateProjectForm,
-"../components";
 import { DeleteTaskForm, UpdateTaskForm } from "../components";
-// import { DeleteWorkplanForm, UpdateWorkplanForm } from "../components";
 import { TASK_STATUS } from "../constant";
 import { useTask } from "../services";
 

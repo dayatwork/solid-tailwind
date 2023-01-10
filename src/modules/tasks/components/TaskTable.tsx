@@ -3,7 +3,6 @@ import { For, Show } from "solid-js";
 import { format } from "timeago.js";
 
 import { Avatar, Badge, Dot } from "../../../components";
-import { formatDate } from "../../../utils/date";
 import { TASK_STATUS } from "../constant";
 import { TaskWithAssignor } from "../services";
 
@@ -14,7 +13,7 @@ interface TaskTableProps {
 
 export function TaskTable(props: TaskTableProps) {
   return (
-    <div class="mt-8 hidden sm:block">
+    <div class="hidden sm:block">
       <div class="inline-block min-w-full border-b border-gray-200 align-middle">
         <table class="min-w-full">
           <thead>

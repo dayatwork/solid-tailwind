@@ -1,8 +1,6 @@
 import { PageTitle } from "../components";
 
-interface HomeProps {
-  // add props here
-}
+interface HomeProps {}
 
 function Home(props: HomeProps) {
   return (

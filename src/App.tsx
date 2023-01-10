@@ -6,7 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { AuthProvider } from "./contexts";
 import { routes } from "./routes/routes";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1 } },
+});
 
 const App: Component = () => {
   const Routes = useRoutes(routes);

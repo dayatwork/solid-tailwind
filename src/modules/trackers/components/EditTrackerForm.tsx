@@ -1,8 +1,9 @@
 import { HiOutlineSave, HiOutlineX } from "solid-icons/hi";
-import { createEffect, createSignal, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 import { Loader, NumberInput, Select, TextInput } from "../../../components";
 import { useTasks } from "../../tasks/services";
+import { TaskStatus } from "../../tasks/type";
 import { formatTime, getNewEndTime, getNewStartTime } from "../helper";
 import { TrackerWithTask, useUpdateTracker } from "../services";
 
@@ -32,8 +33,10 @@ function EditTrackerForm(props: EditTrackerFormProps) {
     startTime() !== props.tracker.start_at ||
     endTime() !== props.tracker.end_at;
 
+  const params = () => ({ status: "ongoing" as TaskStatus });
+
   const mutation = useUpdateTracker();
-  const query = useTasks();
+  const query = useTasks(params);
 
   const handleChangeStartAt = (
     e: Event & {
@@ -94,7 +97,10 @@ function EditTrackerForm(props: EditTrackerFormProps) {
             <Select
               name="task_id"
               options={
-                query.data?.map((t) => ({ label: t.task, value: t.id })) || []
+                query.data?.tasks.map((t) => ({
+                  label: t.task,
+                  value: t.id,
+                })) || []
               }
               value={taskId()}
               onChange={setTaskId}

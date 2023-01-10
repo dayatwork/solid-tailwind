@@ -13,7 +13,7 @@ interface ProjectTableProps {
 
 export function ProjectTable(props: ProjectTableProps) {
   return (
-    <div class="mt-8 hidden sm:block">
+    <div class="hidden sm:block">
       <div class="inline-block min-w-full border-b border-gray-200 align-middle">
         <table class="min-w-full">
           <thead>
@@ -22,7 +22,7 @@ export function ProjectTable(props: ProjectTableProps) {
                 class="border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
                 scope="col"
               >
-                <span class="lg:pl-2">All Projects</span>
+                <span class="lg:pl-2">Projects</span>
               </th>
               <th
                 class="border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"

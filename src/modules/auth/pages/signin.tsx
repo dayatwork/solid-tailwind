@@ -1,5 +1,6 @@
 import { createSignal } from "solid-js";
 import toast from "solid-toast";
+
 import {
   Anchor,
   Button,
@@ -10,9 +11,7 @@ import {
 import OAuthButton from "../../../components/button/OAuthButton";
 import { supabase } from "../../../lib";
 
-interface SigninProps {
-  // add props here
-}
+interface SigninProps {}
 
 function Signin(props: SigninProps) {
   const [email, setEmail] = createSignal("");
