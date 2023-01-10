@@ -14,6 +14,7 @@ import Users from "../modules/users/pages/users";
 import Workplans from "../modules/workplans/pages/workplans";
 import NotFound from "./404";
 import WorkplanDetail from "../modules/workplans/pages/workplan-detail";
+import TaskDetail from "../modules/tasks/pages/task-detail";
 
 export const routes: RouteDefinition[] = [
   {
@@ -43,6 +44,10 @@ export const routes: RouteDefinition[] = [
       {
         path: "/tasks",
         component: Tasks,
+      },
+      {
+        path: "/tasks/:id",
+        component: TaskDetail,
       },
       {
         path: "/trackers",

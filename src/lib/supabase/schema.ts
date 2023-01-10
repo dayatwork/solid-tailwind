@@ -234,9 +234,10 @@ export interface Database {
           description: string | null
           target: number
           status: Database["public"]["Enums"]["task_status"]
+          workplan_id: string | null
         }
         Insert: {
-          id: string
+          id?: string
           created_at?: string
           updated_at?: string
           assignee_id: string
@@ -245,6 +246,7 @@ export interface Database {
           description?: string | null
           target?: number
           status?: Database["public"]["Enums"]["task_status"]
+          workplan_id?: string | null
         }
         Update: {
           id?: string
@@ -256,6 +258,7 @@ export interface Database {
           description?: string | null
           target?: number
           status?: Database["public"]["Enums"]["task_status"]
+          workplan_id?: string | null
         }
       }
       workplans: {
@@ -269,6 +272,7 @@ export interface Database {
           week: number
           year: number
           status: Database["public"]["Enums"]["workplan_status"]
+          target: number
         }
         Insert: {
           id?: string
@@ -280,6 +284,7 @@ export interface Database {
           week: number
           year: number
           status?: Database["public"]["Enums"]["workplan_status"]
+          target?: number
         }
         Update: {
           id?: string
@@ -291,6 +296,7 @@ export interface Database {
           week?: number
           year?: number
           status?: Database["public"]["Enums"]["workplan_status"]
+          target?: number
         }
       }
     }
