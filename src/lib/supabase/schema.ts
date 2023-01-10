@@ -11,78 +11,78 @@ export interface Database {
     Tables: {
       profiles: {
         Row: {
-          id: string
-          updated_at: string | null
-          email: string | null
-          full_name: string | null
           avatar_url: string | null
-          last_sign_in_at: string | null
+          email: string | null
           employee_number: string | null
+          full_name: string | null
+          id: string
+          last_sign_in_at: string | null
           registered_at: string
+          updated_at: string | null
         }
         Insert: {
-          id: string
-          updated_at?: string | null
-          email?: string | null
-          full_name?: string | null
           avatar_url?: string | null
-          last_sign_in_at?: string | null
+          email?: string | null
           employee_number?: string | null
+          full_name?: string | null
+          id: string
+          last_sign_in_at?: string | null
           registered_at?: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          updated_at?: string | null
-          email?: string | null
-          full_name?: string | null
           avatar_url?: string | null
-          last_sign_in_at?: string | null
+          email?: string | null
           employee_number?: string | null
+          full_name?: string | null
+          id?: string
+          last_sign_in_at?: string | null
           registered_at?: string
+          updated_at?: string | null
         }
       }
       project_members: {
         Row: {
           id: string
           join_at: string
-          project_id: string
           member_id: string
           position: string
+          project_id: string
         }
         Insert: {
           id?: string
           join_at?: string
-          project_id: string
           member_id: string
           position: string
+          project_id: string
         }
         Update: {
           id?: string
           join_at?: string
-          project_id?: string
           member_id?: string
           position?: string
+          project_id?: string
         }
       }
       project_timelines: {
         Row: {
-          id: string
           created_at: string
           created_by: string
+          id: string
           project_id: string
           status: Database["public"]["Enums"]["project_status"]
         }
         Insert: {
-          id: string
           created_at?: string
           created_by: string
+          id: string
           project_id: string
           status: Database["public"]["Enums"]["project_status"]
         }
         Update: {
-          id?: string
           created_at?: string
           created_by?: string
+          id?: string
           project_id?: string
           status?: Database["public"]["Enums"]["project_status"]
         }
@@ -90,213 +90,216 @@ export interface Database {
       projects: {
         Row: {
           created_at: string
-          updated_at: string
-          name: string
           description: string | null
-          status: Database["public"]["Enums"]["project_status"]
           id: string
+          name: string
+          status: Database["public"]["Enums"]["project_status"]
+          updated_at: string
         }
         Insert: {
           created_at?: string
-          updated_at?: string
-          name: string
           description?: string | null
-          status?: Database["public"]["Enums"]["project_status"]
           id?: string
+          name: string
+          status?: Database["public"]["Enums"]["project_status"]
+          updated_at?: string
         }
         Update: {
           created_at?: string
-          updated_at?: string
-          name?: string
           description?: string | null
-          status?: Database["public"]["Enums"]["project_status"]
           id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["project_status"]
+          updated_at?: string
         }
       }
       report_attachment: {
         Row: {
-          id: string
-          created_at: string
-          report_id: string
-          employee_id: string
-          name: string
           attachment: string
+          created_at: string
+          employee_id: string
+          id: string
+          name: string
+          report_id: string
           type: Database["public"]["Enums"]["report_attachment_type"]
         }
         Insert: {
-          id: string
-          created_at?: string
-          report_id: string
-          employee_id: string
-          name: string
           attachment: string
+          created_at?: string
+          employee_id: string
+          id: string
+          name: string
+          report_id: string
           type: Database["public"]["Enums"]["report_attachment_type"]
         }
         Update: {
-          id?: string
-          created_at?: string
-          report_id?: string
-          employee_id?: string
-          name?: string
           attachment?: string
+          created_at?: string
+          employee_id?: string
+          id?: string
+          name?: string
+          report_id?: string
           type?: Database["public"]["Enums"]["report_attachment_type"]
         }
       }
       reports: {
         Row: {
-          id: string
-          created_at: string
-          updated_at: string
-          task_id: string
-          employee_id: string
-          report: string
           checked_by: string | null
+          created_at: string
+          employee_id: string
+          id: string
+          report: string
+          task_id: string
+          updated_at: string
         }
         Insert: {
-          id: string
-          created_at?: string
-          updated_at?: string
-          task_id: string
-          employee_id: string
-          report: string
           checked_by?: string | null
+          created_at?: string
+          employee_id: string
+          id: string
+          report: string
+          task_id: string
+          updated_at?: string
         }
         Update: {
-          id?: string
-          created_at?: string
-          updated_at?: string
-          task_id?: string
-          employee_id?: string
-          report?: string
           checked_by?: string | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          report?: string
+          task_id?: string
+          updated_at?: string
         }
       }
       task_timelines: {
         Row: {
-          id: string
           created_at: string
           created_by: string
-          task_id: string
+          id: string
           status: Database["public"]["Enums"]["task_status"]
+          task_id: string
         }
         Insert: {
-          id: string
           created_at?: string
           created_by: string
-          task_id: string
+          id: string
           status: Database["public"]["Enums"]["task_status"]
+          task_id: string
         }
         Update: {
-          id?: string
           created_at?: string
           created_by?: string
-          task_id?: string
+          id?: string
           status?: Database["public"]["Enums"]["task_status"]
+          task_id?: string
         }
       }
       task_trackers: {
         Row: {
-          id: string
-          task_id: string
           employee_id: string
-          start_at: string
           end_at: string | null
-          value: number
-          note: string
+          id: string
+          is_lock: boolean
+          note: string | null
+          start_at: string
+          task_id: string | null
+          value: number | null
         }
         Insert: {
-          id: string
-          task_id: string
           employee_id: string
-          start_at?: string
           end_at?: string | null
-          value: number
-          note?: string
+          id?: string
+          is_lock?: boolean
+          note?: string | null
+          start_at?: string
+          task_id?: string | null
+          value?: number | null
         }
         Update: {
-          id?: string
-          task_id?: string
           employee_id?: string
-          start_at?: string
           end_at?: string | null
-          value?: number
-          note?: string
+          id?: string
+          is_lock?: boolean
+          note?: string | null
+          start_at?: string
+          task_id?: string | null
+          value?: number | null
         }
       }
       tasks: {
         Row: {
-          id: string
-          created_at: string
-          updated_at: string
           assignee_id: string
           assignor_id: string | null
-          task: string
+          created_at: string
           description: string | null
-          target: number
+          id: string
           status: Database["public"]["Enums"]["task_status"]
+          target: number
+          task: string
+          updated_at: string
           workplan_id: string | null
         }
         Insert: {
-          id?: string
-          created_at?: string
-          updated_at?: string
           assignee_id: string
           assignor_id?: string | null
-          task: string
+          created_at?: string
           description?: string | null
-          target?: number
+          id?: string
           status?: Database["public"]["Enums"]["task_status"]
+          target?: number
+          task: string
+          updated_at?: string
           workplan_id?: string | null
         }
         Update: {
-          id?: string
-          created_at?: string
-          updated_at?: string
           assignee_id?: string
           assignor_id?: string | null
-          task?: string
+          created_at?: string
           description?: string | null
-          target?: number
+          id?: string
           status?: Database["public"]["Enums"]["task_status"]
+          target?: number
+          task?: string
+          updated_at?: string
           workplan_id?: string | null
         }
       }
       workplans: {
         Row: {
-          id: string
           created_at: string
-          updated_at: string
-          employee_id: string
-          plan: string
           description: string | null
-          week: number
-          year: number
+          employee_id: string
+          id: string
+          plan: string
           status: Database["public"]["Enums"]["workplan_status"]
           target: number
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          updated_at?: string
-          employee_id: string
-          plan: string
-          description?: string | null
+          updated_at: string
           week: number
           year: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          employee_id: string
+          id?: string
+          plan: string
           status?: Database["public"]["Enums"]["workplan_status"]
           target?: number
+          updated_at?: string
+          week: number
+          year: number
         }
         Update: {
-          id?: string
           created_at?: string
-          updated_at?: string
-          employee_id?: string
-          plan?: string
           description?: string | null
-          week?: number
-          year?: number
+          employee_id?: string
+          id?: string
+          plan?: string
           status?: Database["public"]["Enums"]["workplan_status"]
           target?: number
+          updated_at?: string
+          week?: number
+          year?: number
         }
       }
     }

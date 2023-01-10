@@ -1,5 +1,7 @@
 import { A } from "@solidjs/router";
 import { For, Show } from "solid-js";
+import { format } from "timeago.js";
+
 import { Badge, Dot } from "../../../components";
 import { formatDate } from "../../../utils/date";
 import { WORKPLAN_STATUS } from "../constant";
@@ -42,7 +44,7 @@ export function WorkplanTable(props: WorkplanTableProps) {
                 Status
               </th>
               <th
-                class="border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
+                class="border-b whitespace-nowrap border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
                 scope="col"
               >
                 Last updated
@@ -86,7 +88,7 @@ export function WorkplanTable(props: WorkplanTableProps) {
                       </Badge>
                     </td>
                     <td class="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
-                      {formatDate(workplan.updated_at)}
+                      {format(workplan.updated_at)}
                     </td>
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
                       <A

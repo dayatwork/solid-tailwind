@@ -1,6 +1,7 @@
 import { For, Show } from "solid-js";
-import { Avatar, TableSkeleton } from "../../../components";
+import { format } from "timeago.js";
 
+import { Avatar, TableSkeleton } from "../../../components";
 import { User } from "../type";
 
 interface UserTableProps {
@@ -34,7 +35,7 @@ export function UserTable(props: UserTableProps) {
                 Registered At
               </th>
               <th
-                class="hidden border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                class="hidden border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 whitespace-nowrap md:table-cell"
                 scope="col"
               >
                 Last Sign In
@@ -81,9 +82,7 @@ export function UserTable(props: UserTableProps) {
                       {new Date(user.registered_at).toLocaleDateString("id-ID")}
                     </td>
                     <td class="hidden whitespace-nowrap px-6 py-3 text-sm text-gray-500 md:table-cell">
-                      {user.last_sign_in_at
-                        ? new Date(user.last_sign_in_at).toLocaleString("id-ID")
-                        : ""}
+                      {user.last_sign_in_at ? format(user.last_sign_in_at) : ""}
                     </td>
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
                       <a href="#" class="text-purple-600 hover:text-purple-900">

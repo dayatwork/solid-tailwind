@@ -22,7 +22,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
   const id = createUniqueId();
   return (
     <div>
-      <div class="flex justify-between">
+      <div class="flex justify-between mb-1">
         <label for={id} class="block text-sm font-medium text-gray-700">
           {props.label}{" "}
           <Show when={props.required && props.withRequiredLabel}>
@@ -35,7 +35,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
           </span>
         </Show>
       </div>
-      <div class="relative mt-1 rounded-md shadow-sm">
+      <div class="relative rounded-md shadow-sm">
         <textarea
           name={props.name}
           id={id}

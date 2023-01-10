@@ -43,13 +43,13 @@ export function NumberInput(props: NumberInputProps) {
   return (
     <div {...api().rootProps}>
       <label
-        class="block text-sm font-medium text-gray-700"
+        class="block mb-1 text-sm font-medium text-gray-700"
         {...api().labelProps}
       >
         {props.label}
       </label>
       <div
-        class="relative mt-1 rounded-md shadow-sm"
+        class="relative rounded-md shadow-sm"
         style={{ width: props.width ? `${props.width}px` : undefined }}
       >
         <input
