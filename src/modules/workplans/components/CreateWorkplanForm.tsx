@@ -78,6 +78,8 @@ export function CreateWorkplanForm(props: CreateWorkplanFormProps) {
               label="Week"
               value={week()}
               onChange={setWeek}
+              min={1}
+              max={53}
             />
 
             <button
@@ -92,10 +94,12 @@ export function CreateWorkplanForm(props: CreateWorkplanFormProps) {
           </div>
           <div class="flex space-x-1 items-end">
             <NumberInput
-              readonly
+              readonly={!allowChangeYear()}
               label="Year"
               value={year()}
               onChange={setYear}
+              min={CURRENT_YEAR - 1}
+              max={CURRENT_YEAR + 1}
             />
             <button
               type="button"

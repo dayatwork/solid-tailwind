@@ -18,6 +18,7 @@ interface NumberInputProps {
   value?: number;
   readonly?: boolean;
   ref?: HTMLInputElement;
+  width?: number;
 }
 
 export function NumberInput(props: NumberInputProps) {
@@ -32,7 +33,6 @@ export function NumberInput(props: NumberInputProps) {
       minFractionDigits: props.minFractionDigits,
       onChange: (v) => props.onChange(v.valueAsNumber),
       value: props.value && String(props.value),
-      readOnly: props.readonly,
     })
   );
 
@@ -48,7 +48,10 @@ export function NumberInput(props: NumberInputProps) {
       >
         {props.label}
       </label>
-      <div class="relative mt-1 rounded-md shadow-sm">
+      <div
+        class="relative mt-1 rounded-md shadow-sm"
+        style={{ width: props.width ? `${props.width}px` : undefined }}
+      >
         <input
           ref={props.ref}
           class={`block w-full rounded-md sm:text-sm focus:outline-none disabled:bg-gray-200 disabled:text-gray-600 ${
@@ -57,6 +60,7 @@ export function NumberInput(props: NumberInputProps) {
               : "border-red-300 focus:border-red-500 focus:ring-red-500"
           }`}
           {...api().inputProps}
+          readOnly={props.readonly}
         />
         <Show when={!props.readonly && !props.disabled}>
           <div class="absolute inset-y-0 right-0 flex flex-col rounded-md p-[1px]">

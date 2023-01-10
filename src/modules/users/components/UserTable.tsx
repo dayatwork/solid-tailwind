@@ -1,5 +1,5 @@
 import { For, Show } from "solid-js";
-import { TableSkeleton } from "../../../components";
+import { Avatar, TableSkeleton } from "../../../components";
 
 import { User } from "../type";
 
@@ -60,6 +60,10 @@ export function UserTable(props: UserTableProps) {
                           class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600"
                           aria-hidden="true"
                         ></div>
+                        <Avatar
+                          avatarPath={user.avatar_url}
+                          alt={user.full_name}
+                        />
                         <a href="#" class="truncate hover:text-gray-600">
                           <span>
                             {user.full_name}
