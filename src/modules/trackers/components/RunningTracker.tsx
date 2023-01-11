@@ -32,10 +32,6 @@ export function RunningTracker(props: RunningTrackerProps) {
   );
   const [value, setValue] = createSignal(props.runningTracker?.value);
 
-  const isFormDirty = () =>
-    props.runningTracker?.note !== note() ||
-    props.runningTracker?.task_id !== taskId();
-
   const [session] = useAuth();
   const tasksParams = () => ({ status: "ongoing" as TaskStatus });
   const tasksQuery = useTasks(tasksParams);
@@ -112,10 +108,7 @@ export function RunningTracker(props: RunningTrackerProps) {
                 placeholder="Note"
                 name="note"
                 value={note()}
-                onChange={(v) => {
-                  setNote(v);
-                  // handleChange("note", v);
-                }}
+                onChange={setNote}
               />
             </div>
             <div class="hidden whitespace-nowrap text-sm text-gray-900 md:block w-64">
@@ -144,9 +137,6 @@ export function RunningTracker(props: RunningTrackerProps) {
                 max={100}
                 value={value()}
                 onChange={setValue}
-                // onBlur={(v) => {
-                //   handleChange("value", v);
-                // }}
               />
             </div>
             <Timer startAt={props.runningTracker.start_at} />

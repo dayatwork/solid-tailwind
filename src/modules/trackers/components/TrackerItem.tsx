@@ -6,7 +6,7 @@ import {
 } from "solid-icons/hi";
 import { Show } from "solid-js";
 
-import { Dot, Loader, Tooltip } from "../../../components";
+import { Anchor, Dot, Loader, Tooltip } from "../../../components";
 import { formatTime } from "../../../utils/date";
 import { TrackerWithTask } from "../services";
 
@@ -32,7 +32,9 @@ function TrackerItem(props: TrackerItemProps) {
       </div>
       <div class="w-60 hidden whitespace-nowrap px-2 py-3 text-sm text-gray-900 md:table-cell">
         <Show when={props.tracker.task} fallback={<p>No task selected</p>}>
-          <p class="font-medium truncate">{props.tracker.task.task}</p>
+          <Anchor href={`/tasks/${props.tracker.task.id}`}>
+            {props.tracker.task.task}
+          </Anchor>
           <p class="text-gray-500">(Target: {props.tracker.task.target}%)</p>
         </Show>
       </div>

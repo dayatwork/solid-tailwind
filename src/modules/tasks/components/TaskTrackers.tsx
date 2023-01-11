@@ -86,15 +86,6 @@ export function TaskTrackers(props: TaskTrackersProps) {
   const totalDurationEndedTrackers = () =>
     calculateTotalDuration(props.trackers.filter((t) => !!t.end_at));
   const runningTrackers = () => props.trackers.filter((t) => !t.end_at);
-  const [runningTimer, setRunningTimer] = createSignal(
-    new Date().getTime() - new Date(runningTrackers()[0].start_at).getTime()
-  );
-
-  const timer = setInterval(() => {
-    setRunningTimer(runningTimer() + 1000);
-  }, 1000);
-
-  onCleanup(() => clearInterval(timer));
 
   return (
     <div class="flow-root">
@@ -121,10 +112,12 @@ export function TaskTrackers(props: TaskTrackersProps) {
           )}
         </For>
       </ul>
-      <p class="mt-8 text-right font-mono text-green-600 font-semibold">
-        Total: {props.trackers.reduce((acc, curr) => curr.value + acc, 0)}% (
-        {displayDuration(totalDurationEndedTrackers() + runningTimer())})
-      </p>
+      <Show when={!runningTrackers().length}>
+        <p class="mt-8 text-right font-mono text-green-600 font-semibold">
+          Total: {props.trackers.reduce((acc, curr) => curr.value + acc, 0)}% (
+          {displayDuration(totalDurationEndedTrackers())})
+        </p>
+      </Show>
     </div>
   );
 }

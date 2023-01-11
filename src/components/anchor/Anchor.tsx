@@ -12,7 +12,7 @@ export function Anchor(props: AnchorProps) {
   return (
     <A
       href={props.href}
-      class={`font-medium text-purple-600 hover:text-purple-500 ${
+      class={`font-medium text-purple-600 hover:text-purple-500 truncate ${
         props.size === "md"
           ? "text-base"
           : props.size === "lg"

@@ -34,7 +34,7 @@ export function NumberInput(props: NumberInputProps) {
       maxFractionDigits: props.maxFractionDigits,
       minFractionDigits: props.minFractionDigits,
       onChange: (v) => props.onChange(v.valueAsNumber),
-      onBlur: (v) => props.onBlur(v.valueAsNumber),
+      onBlur: (v) => props.onBlur?.(v.valueAsNumber),
       value: props.value && String(props.value),
     })
   );
