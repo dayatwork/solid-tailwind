@@ -8,6 +8,7 @@ interface NumberInputProps {
   error?: string;
   description?: string;
   disabled?: boolean;
+  placeholder?: string;
   min?: number;
   max?: number;
   minFractionDigits?: number;
@@ -15,6 +16,7 @@ interface NumberInputProps {
   step?: number;
   allowMouseWheel?: boolean;
   onChange?: (v: number) => void;
+  onBlur?: (v: number) => void;
   value?: number;
   readonly?: boolean;
   ref?: HTMLInputElement;
@@ -32,6 +34,7 @@ export function NumberInput(props: NumberInputProps) {
       maxFractionDigits: props.maxFractionDigits,
       minFractionDigits: props.minFractionDigits,
       onChange: (v) => props.onChange(v.valueAsNumber),
+      onBlur: (v) => props.onBlur(v.valueAsNumber),
       value: props.value && String(props.value),
     })
   );
@@ -43,7 +46,9 @@ export function NumberInput(props: NumberInputProps) {
   return (
     <div {...api().rootProps}>
       <label
-        class="block mb-1 text-sm font-medium text-gray-700"
+        class={`block text-sm font-medium text-gray-700 ${
+          props.label ? "mb-1" : ""
+        }`}
         {...api().labelProps}
       >
         {props.label}
@@ -61,6 +66,7 @@ export function NumberInput(props: NumberInputProps) {
           }`}
           {...api().inputProps}
           readOnly={props.readonly}
+          placeholder={props.placeholder}
         />
         <Show when={!props.readonly && !props.disabled}>
           <div class="absolute inset-y-0 right-0 flex flex-col rounded-md p-[1px]">

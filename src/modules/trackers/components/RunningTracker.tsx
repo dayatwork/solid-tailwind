@@ -1,6 +1,7 @@
 import { Session } from "@supabase/supabase-js";
-import { HiOutlinePlay, HiSolidPlay, HiSolidStop } from "solid-icons/hi";
-import { createSignal, Show } from "solid-js";
+import { HiSolidPlay, HiSolidStop } from "solid-icons/hi";
+import { createEffect, createSignal, Show } from "solid-js";
+
 import {
   Button,
   Loader,
@@ -10,11 +11,16 @@ import {
 } from "../../../components";
 import { useAuth } from "../../../contexts";
 import { useTasks } from "../../tasks/services";
-import { TrackerWithTask, useEndTracker, useStartTracker } from "../services";
+import { TaskStatus } from "../../tasks/type";
+import {
+  TrackerWithTask,
+  useEndTracker,
+  useStartTracker,
+  useUpdateTracker,
+} from "../services";
 import { Timer } from "./Timer";
 
 interface RunningTrackerProps {
-  // add props here
   runningTracker: TrackerWithTask | null;
   loading: boolean;
 }
@@ -26,10 +32,16 @@ export function RunningTracker(props: RunningTrackerProps) {
   );
   const [value, setValue] = createSignal(props.runningTracker?.value);
 
+  const isFormDirty = () =>
+    props.runningTracker?.note !== note() ||
+    props.runningTracker?.task_id !== taskId();
+
   const [session] = useAuth();
-  const tasksQuery = useTasks();
+  const tasksParams = () => ({ status: "ongoing" as TaskStatus });
+  const tasksQuery = useTasks(tasksParams);
   const startMutation = useStartTracker();
   const endMutation = useEndTracker();
+  const updateMutation = useUpdateTracker();
 
   const handleStartTracker = async () => {
     if (!session()) return;
@@ -38,11 +50,22 @@ export function RunningTracker(props: RunningTrackerProps) {
     startMutation.mutate({ employee_id });
   };
 
-  const handleEndTracker = async () => {
-    const id = props.runningTracker.id;
+  const handleEndTracker = async (e: Event) => {
+    e.preventDefault();
+
     endMutation.mutate({
-      id,
+      id: props.runningTracker.id,
       props: { note: note(), value: value(), task_id: taskId() },
+    });
+  };
+
+  const handleChange = (
+    column: "note" | "task_id" | "value",
+    value: string | number
+  ) => {
+    updateMutation.mutate({
+      id: props.runningTracker.id,
+      inputs: { [column]: value },
     });
   };
 
@@ -81,7 +104,7 @@ export function RunningTracker(props: RunningTrackerProps) {
           }
         >
           <form
-            onSubmit={() => {}}
+            onSubmit={handleEndTracker}
             class="mt-2 text-center bg-purple-50 pb-4 pt-3 px-4 rounded-md flex gap-6 items-center border-dashed border-2 border-purple-500"
           >
             <div class="flex-1 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -89,7 +112,10 @@ export function RunningTracker(props: RunningTrackerProps) {
                 placeholder="Note"
                 name="note"
                 value={note()}
-                onChange={setNote}
+                onChange={(v) => {
+                  setNote(v);
+                  // handleChange("note", v);
+                }}
               />
             </div>
             <div class="hidden whitespace-nowrap text-sm text-gray-900 md:block w-64">
@@ -97,14 +123,17 @@ export function RunningTracker(props: RunningTrackerProps) {
                 <Select
                   name="task_id"
                   options={
-                    tasksQuery.data?.map((t) => ({
+                    tasksQuery.data?.tasks.map((t) => ({
                       label: t.task,
                       value: t.id,
                     })) || []
                   }
                   placeholder="Select Task"
                   value={taskId()}
-                  onChange={setTaskId}
+                  onChange={(v) => {
+                    setTaskId(v);
+                    handleChange("task_id", v);
+                  }}
                 />
               </Show>
             </div>
@@ -115,12 +144,15 @@ export function RunningTracker(props: RunningTrackerProps) {
                 max={100}
                 value={value()}
                 onChange={setValue}
+                // onBlur={(v) => {
+                //   handleChange("value", v);
+                // }}
               />
             </div>
             <Timer startAt={props.runningTracker.start_at} />
             <Button
+              type="submit"
               variant="danger"
-              onClick={handleEndTracker}
               loading={endMutation.isLoading}
             >
               <HiSolidStop size={20} />

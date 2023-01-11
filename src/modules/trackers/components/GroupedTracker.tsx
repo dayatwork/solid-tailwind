@@ -1,6 +1,6 @@
 import { createSignal, For, Show } from "solid-js";
-import { calculateTotalDuration, displayDuration } from "../helper";
 
+import { calculateTotalDuration, displayDuration } from "../helper";
 import { TrackerWithTask, useDeleteTracker } from "../services";
 import EditTrackerForm from "./EditTrackerForm";
 import TrackerItem from "./TrackerItem";

@@ -1,7 +1,7 @@
 import { useNavigate } from "@solidjs/router";
 import { createSignal } from "solid-js";
-import { Button } from "../../../components";
 
+import { Button } from "../../../components";
 import { useDeleteProject } from "../services";
 import { ProjectWithMembers } from "../type";
 

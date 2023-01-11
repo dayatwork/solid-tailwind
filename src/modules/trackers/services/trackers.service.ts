@@ -6,6 +6,7 @@ import {
 import toast from "solid-toast";
 import { supabase } from "../../../lib";
 import { Database } from "../../../lib/supabase/schema";
+import { TASKS_DETAIL_KEY } from "../../tasks/services";
 import { TaskStatus } from "../../tasks/type";
 
 // ========================
@@ -30,11 +31,51 @@ export const TRACKERS_KEY = "task_trackers";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Trackers *******
-export const getTrackers = async () => {
-  let { data, error } = await supabase
+interface GetTrackersParams {
+  task_id?: string;
+  employee_id?: string;
+  start_at_from?: string;
+  start_at_to?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getTrackers = async (params: GetTrackersParams) => {
+  const {
+    task_id,
+    employee_id,
+    start_at_from,
+    start_at_to,
+    limit = 10,
+    page = 1,
+  } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("task_trackers")
     .select(SELECT_TRACKER_WITH_TASK_QUERY)
-    .order("start_at", { ascending: false });
+    .order("start_at", { ascending: false })
+    .range(from, to);
+
+  if (task_id) {
+    query = query.eq("task_id", task_id);
+  }
+
+  if (employee_id) {
+    query = query.eq("employee_id", employee_id);
+  }
+
+  if (start_at_from) {
+    query = query.gte("start_at", start_at_from);
+  }
+
+  if (start_at_to) {
+    query = query.lte("start_at", start_at_to);
+  }
+
+  let { data, error } = await query;
 
   if (error) {
     throw error;
@@ -79,15 +120,13 @@ interface StartTrackerInputs {
 }
 
 export const startTracker = async (inputs: StartTrackerInputs) => {
-  const { data: runningTracker } = await supabase
+  const { count } = await supabase
     .from("task_trackers")
-    .select("id")
+    .select("id", { count: "exact" })
     .eq("employee_id", inputs.employee_id)
-    .is("end_at", null)
-    .limit(1)
-    .single();
+    .is("end_at", null);
 
-  if (runningTracker) {
+  if (count) {
     throw new Error("Tracker already running");
   }
 
@@ -111,7 +150,9 @@ export const endTracker = async (id: string, inputs: EndTrackerInputs) => {
   let { data, error } = await supabase
     .from("task_trackers")
     .update({ ...inputs, end_at: new Date().toISOString() })
-    .eq("id", id);
+    .eq("id", id)
+    .select("*")
+    .single();
 
   if (error) {
     throw error;
@@ -136,7 +177,9 @@ export const updateTracker = async (
   let { data, error } = await supabase
     .from("task_trackers")
     .update(inputs)
-    .eq("id", id);
+    .eq("id", id)
+    .select("*")
+    .single();
 
   if (error) {
     throw error;
@@ -150,7 +193,9 @@ export const deleteTracker = async (id: string) => {
   let { data, error } = await supabase
     .from("task_trackers")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .select("*")
+    .single();
 
   if (error) {
     throw error;
@@ -163,10 +208,14 @@ export const deleteTracker = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Trackers Query  *******
-export const useTrackers = () => {
-  return createQuery(() => [TRACKERS_KEY], getTrackers, {
-    staleTime: Infinity,
-  });
+export const useTrackers = (params: GetTrackersParams) => {
+  return createQuery(
+    () => [TRACKERS_KEY, params],
+    () => getTrackers(params),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Tracker Query  *******
@@ -223,8 +272,9 @@ export const useEndTracker = (props?: UseEndTrackerProps) => {
   return createMutation({
     mutationFn: (variable: { id: string; props: EndTrackerInputs }) =>
       endTracker(variable.id, variable.props),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries([TRACKERS_KEY]);
+      queryClient.invalidateQueries([TASKS_DETAIL_KEY, data.task_id]);
       toast.success("New tracker ended");
       props?.onSuccess?.();
     },
@@ -247,8 +297,9 @@ export const useUpdateTracker = (props?: UseUpdateTrackerProps) => {
   return createMutation({
     mutationFn: (variables: { id: string; inputs: UpdateTrackerInputs }) =>
       updateTracker(variables.id, variables.inputs),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries([TRACKERS_KEY]);
+      queryClient.invalidateQueries([TASKS_DETAIL_KEY, data.task_id]);
       toast.success("Tracker updated");
       props?.onSuccess?.();
     },
@@ -270,8 +321,9 @@ export const useDeleteTracker = (props?: UseDeleteTrackerProps) => {
   const queryClient = useQueryClient();
   return createMutation({
     mutationFn: (id: string) => deleteTracker(id),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries([TRACKERS_KEY]);
+      queryClient.invalidateQueries([TASKS_DETAIL_KEY, data.task_id]);
       toast.success("Tracker deleted");
       props?.onSuccess?.();
     },

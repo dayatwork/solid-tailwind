@@ -1,16 +1,27 @@
 import { A, useParams } from "@solidjs/router";
-import { HiSolidArrowLeft, HiSolidPencil } from "solid-icons/hi";
-import { TbTarget } from "solid-icons/tb";
+import {
+  HiOutlineClock,
+  HiOutlineDocumentReport,
+  HiOutlineFolder,
+  HiOutlineInformationCircle,
+  HiSolidArrowLeft,
+  HiSolidLink,
+  HiSolidPencil,
+} from "solid-icons/hi";
+import {
+  TbBrandFigma,
+  TbBrandGithub,
+  TbBrandGitlab,
+  TbBrandGoogleDrive,
+  TbBrandNotion,
+  TbBrandYoutube,
+  TbTarget,
+} from "solid-icons/tb";
 import { Match, Show, Switch } from "solid-js";
 
 import { Badge, Dialog, Loader } from "../../../components";
-import // DeleteProjectForm,
-// ProjectInfo,
-// ProjectMembers,
-// UpdateProjectForm,
-"../components";
-import { DeleteTaskForm, UpdateTaskForm } from "../components";
-// import { DeleteWorkplanForm, UpdateWorkplanForm } from "../components";
+import { calculateTotalDuration, displayDuration } from "../../trackers/helper";
+import { DeleteTaskForm, TaskTrackers, UpdateTaskForm } from "../components";
 import { TASK_STATUS } from "../constant";
 import { useTask } from "../services";
 
@@ -101,12 +112,110 @@ function TaskDetail(props: TaskDetailProps) {
                         <ProjectMembers project={query.data} />
                       </div> */}
                     </aside>
-                    <div class="py-3 xl:pt-6 xl:pb-0">
-                      <h2 class="text-sm font-medium text-gray-900 mb-2">
-                        Description
-                      </h2>
-                      <div class="max-w-5xl">
-                        <p class="text-gray-900">{query.data.description}</p>
+                    <div class="divide-y divide-gray-200">
+                      <div class="pt-6 pb-8">
+                        <h2 class="text-sm font-medium text-purple-600 mb-2 flex items-center gap-1.5">
+                          <span class="">
+                            <HiOutlineInformationCircle size={20} />
+                          </span>
+                          <span>Description</span>
+                        </h2>
+                        <div class="max-w-5xl">
+                          <p class="text-gray-900">{query.data.description}</p>
+                        </div>
+                      </div>
+                      <div class="pt-6 pb-8">
+                        <h2 class="text-sm font-medium text-purple-600 mb-4 flex items-center gap-1.5">
+                          <span class="">
+                            <HiOutlineClock size={20} />
+                          </span>
+                          <span>Trackers</span>
+                        </h2>
+                        <div class="max-w-5xl">
+                          <TaskTrackers trackers={query.data.trackers} />
+                        </div>
+                      </div>
+                      <div class="pt-6 pb-8">
+                        <h2 class="text-sm font-medium text-purple-600 mb-3 flex items-center gap-1.5">
+                          <span class="">
+                            <HiOutlineDocumentReport size={20} />
+                          </span>
+                          <span>Reports</span>
+                        </h2>
+                        <div class="max-w-5xl">
+                          <p>{query.data.report?.report}</p>
+                        </div>
+                      </div>
+                      <div class="pt-6 pb-8">
+                        <h3 class="text-sm font-medium text-purple-600 mb-3 flex items-center gap-1.5">
+                          <span class="">
+                            <HiOutlineFolder size={20} />
+                          </span>
+                          <span>Attachments</span>
+                        </h3>
+                        <div class="max-w-5xl">
+                          <ul class="bg-gray-100 p-4 rounded-md flex gap-x-20 gap-y-5 flex-wrap shadow-sm">
+                            {query.data.report?.attachments?.map(
+                              (attachment) => (
+                                <li class="flex items-center gap-2">
+                                  <Switch fallback={<HiSolidLink size={22} />}>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "github.com"
+                                      )}
+                                    >
+                                      <TbBrandGithub size={22} />
+                                    </Match>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "gitlab.com"
+                                      )}
+                                    >
+                                      <TbBrandGitlab size={22} />
+                                    </Match>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "figma.com"
+                                      )}
+                                    >
+                                      <TbBrandFigma size={22} />
+                                    </Match>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "youtube.com"
+                                      )}
+                                    >
+                                      <TbBrandYoutube size={22} />
+                                    </Match>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "notion.so"
+                                      )}
+                                    >
+                                      <TbBrandNotion size={22} />
+                                    </Match>
+                                    <Match
+                                      when={attachment.attachment.includes(
+                                        "drive.google.com"
+                                      )}
+                                    >
+                                      <TbBrandGoogleDrive size={22} />
+                                    </Match>
+                                  </Switch>
+
+                                  <a
+                                    href={attachment.attachment}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-sm font-medium hover:underline hover:text-purple-600 whitespace-nowrap truncate"
+                                  >
+                                    {attachment.name}
+                                  </a>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>

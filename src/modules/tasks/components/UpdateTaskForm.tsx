@@ -10,12 +10,12 @@ import {
 } from "../../../components";
 import { useAuth } from "../../../contexts";
 import { taskStatusOptions } from "../constant";
-import { TaskWithAssignor, useCreateTask, useUpdateTask } from "../services";
+import { TaskDetail, useUpdateTask } from "../services";
 import { TaskStatus } from "../type";
 
 interface UpdateTaskFormProps {
   close(): void;
-  defaultTask: TaskWithAssignor;
+  defaultTask: TaskDetail;
 }
 
 export function UpdateTaskForm(props: UpdateTaskFormProps) {

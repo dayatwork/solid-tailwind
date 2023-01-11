@@ -113,7 +113,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      report_attachment: {
+      report_attachments: {
         Row: {
           attachment: string
           created_at: string
@@ -127,7 +127,7 @@ export interface Database {
           attachment: string
           created_at?: string
           employee_id: string
-          id: string
+          id?: string
           name: string
           report_id: string
           type: Database["public"]["Enums"]["report_attachment_type"]
@@ -156,7 +156,7 @@ export interface Database {
           checked_by?: string | null
           created_at?: string
           employee_id: string
-          id: string
+          id?: string
           report: string
           task_id: string
           updated_at?: string

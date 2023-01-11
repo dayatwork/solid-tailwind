@@ -1,6 +1,4 @@
-interface TrackerListProps {
-  // add props here
-}
+interface TrackerListProps {}
 
 export function TrackerList(props: TrackerListProps) {
   return (
@@ -45,8 +43,6 @@ export function TrackerList(props: TrackerListProps) {
             </svg>
           </a>
         </li>
-
-        {/* <!-- More projects... --> */}
       </ul>
     </div>
   );

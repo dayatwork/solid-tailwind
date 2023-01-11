@@ -1,6 +1,5 @@
 import { Session } from "@supabase/supabase-js";
-import { HiSolidLockClosed, HiSolidLockOpen } from "solid-icons/hi";
-import { createSignal, Show } from "solid-js";
+import { createSignal } from "solid-js";
 
 import {
   Button,
@@ -8,10 +7,8 @@ import {
   Select,
   Textarea,
   TextInput,
-  Tooltip,
 } from "../../../components";
 import { useAuth } from "../../../contexts";
-import { CURRENT_WEEK, CURRENT_YEAR } from "../../../utils/date";
 import { taskStatusOptions } from "../constant";
 import { useCreateTask } from "../services";
 import { TaskStatus } from "../type";

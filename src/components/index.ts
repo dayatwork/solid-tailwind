@@ -9,6 +9,7 @@ export * from "./divider";
 export * from "./inputs";
 export * from "./loader";
 export * from "./menu";
+export * from "./pagination";
 export * from "./selects";
 export * from "./skeleton";
 export * from "./tooltip";

@@ -13,6 +13,7 @@ interface SelectProps {
   disabled?: boolean;
   description?: string;
   error?: string;
+  width?: number;
 }
 
 export function Select(props: SelectProps) {
@@ -31,7 +32,10 @@ export function Select(props: SelectProps) {
   const api = createMemo(() => select.connect(state, send, normalizeProps));
 
   return (
-    <div class="w-full">
+    <div
+      class="w-full"
+      style={{ width: props.width ? `${props.width}px` : undefined }}
+    >
       <div class="select w-full">
         {/* Hidden select */}
         <select {...api().hiddenSelectProps}>
@@ -41,9 +45,14 @@ export function Select(props: SelectProps) {
         </select>
 
         {/* Custom Select */}
-        <div class="control">
+        <div
+          class="control"
+          style={{ width: props.width ? `${props.width}px` : undefined }}
+        >
           <label
-            class="block mb-1 text-sm font-medium text-gray-700"
+            class={`block  text-sm font-medium text-gray-700 ${
+              props.label ? "mb-1" : ""
+            }`}
             {...api().labelProps}
           >
             {props.label}

@@ -1,5 +1,5 @@
 import { formatDate } from "../../utils/date";
-import { TrackerWithTask } from "./services";
+import { Tracker, TrackerWithTask } from "./services";
 
 export function groupTrackersByDate(trackers: TrackerWithTask[]) {
   return trackers?.reduce((acc, curr) => {
@@ -81,10 +81,13 @@ export const getNewEndTime = ({
   return newEndDate.toISOString();
 };
 
-export function calculateTotalDuration(trackers: TrackerWithTask[]) {
+export function calculateTotalDuration(
+  trackers: (TrackerWithTask | Tracker)[]
+) {
   return trackers.reduce((acc, curr) => {
     const duration =
-      new Date(curr.end_at!).getTime() - new Date(curr.start_at!).getTime();
+      (curr.end_at ? new Date(curr.end_at) : new Date()).getTime() -
+      new Date(curr.start_at!).getTime();
     return acc + duration;
   }, 0);
 }

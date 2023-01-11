@@ -2,17 +2,11 @@ import { A, useParams } from "@solidjs/router";
 import {
   HiOutlineCalendar,
   HiSolidArrowLeft,
-  HiSolidCalendar,
   HiSolidPencil,
 } from "solid-icons/hi";
 import { Match, Show, Switch } from "solid-js";
 
 import { Badge, Dialog, Loader } from "../../../components";
-import // DeleteProjectForm,
-// ProjectInfo,
-// ProjectMembers,
-// UpdateProjectForm,
-"../components";
 import { DeleteWorkplanForm, UpdateWorkplanForm } from "../components";
 import { WORKPLAN_STATUS } from "../constant";
 import { useWorkplan } from "../services";

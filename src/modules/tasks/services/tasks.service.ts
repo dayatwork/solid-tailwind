@@ -22,39 +22,101 @@ export type TaskWithAssignor = Task & {
   assignor?: Assignor;
 };
 
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type Tracker = Database["public"]["Tables"]["task_trackers"]["Row"];
+type Report = Database["public"]["Tables"]["reports"]["Row"];
+type ReportAttachment =
+  Database["public"]["Tables"]["report_attachments"]["Row"];
+
+export type TaskDetail = Task & {
+  assignor?: Profile;
+  trackers?: Tracker[];
+  report?: (Report & { attachments: ReportAttachment[] }) | null;
+};
+
 // ===================================
 // ======== Supabase Queries =========
 // ===================================
 export const SELECT_TASK_WITH_ASSIGNOR =
   "*, assignor:assignor_id(id, full_name, employee_number, avatar_url)";
 
+export const SELECT_TASK_WITH_DETAILS =
+  "*, assignor:assignor_id(*), trackers:task_trackers(*), report:reports(*, attachments:report_attachments(*))";
+
 // =============================
 // ======== Query Keys =========
 // =============================
 export const TASKS_KEY = "tasks";
+export const TASKS_DETAIL_KEY = "tasks-detail";
 
 // ===========================
 // ======== Fetchers =========
 // ===========================
 // ******* Get Tasks *******
-export const getTasks = async () => {
-  let { data, error } = await supabase
+interface GetTasksParams {
+  status?: TaskStatus;
+  assignee_id?: string;
+  assignor_id?: string;
+  workplan_id?: string;
+  task?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getTasks = async (params: GetTasksParams) => {
+  const {
+    status,
+    assignee_id,
+    assignor_id,
+    workplan_id,
+    task,
+    limit = 10,
+    page = 1,
+  } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("tasks")
-    .select(SELECT_TASK_WITH_ASSIGNOR)
-    .order("created_at");
+    .select(SELECT_TASK_WITH_ASSIGNOR, { count: "exact" })
+    .order("created_at")
+    .range(from, to);
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  if (assignee_id) {
+    query = query.eq("assignee_id", assignee_id);
+  }
+
+  if (assignor_id) {
+    query = query.eq("assignor_id", assignor_id);
+  }
+
+  if (workplan_id) {
+    query = query.eq("workplan_id", workplan_id);
+  }
+
+  if (task) {
+    query = query.ilike("task", `%${task}%`);
+  }
+
+  let { data, error, count } = await query;
 
   if (error) {
     throw error;
   }
 
-  return data as TaskWithAssignor[];
+  return { count, tasks: data } as { count: number; tasks: TaskWithAssignor[] };
 };
 
 // ******* Get Task *******
 export const getTask = async (id: string) => {
   let { data, error } = await supabase
     .from("tasks")
-    .select(SELECT_TASK_WITH_ASSIGNOR)
+    .select(SELECT_TASK_WITH_DETAILS)
     .eq("id", id)
     .single();
 
@@ -62,7 +124,7 @@ export const getTask = async (id: string) => {
     throw error;
   }
 
-  return data as TaskWithAssignor;
+  return data as TaskDetail;
 };
 
 // ******* Create Task *******
@@ -123,16 +185,20 @@ export const deleteTask = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Tasks Query  *******
-export const useTasks = () => {
-  return createQuery(() => [TASKS_KEY], getTasks, {
-    staleTime: Infinity,
-  });
+export const useTasks = (params: () => GetTasksParams) => {
+  return createQuery(
+    () => [TASKS_KEY, params()],
+    () => getTasks(params()),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Task Query  *******
 export const useTask = (id: string) => {
   return createQuery(
-    () => [TASKS_KEY, id],
+    () => [TASKS_DETAIL_KEY, id],
     () => getTask(id),
     {
       staleTime: Infinity,
