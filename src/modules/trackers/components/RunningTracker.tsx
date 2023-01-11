@@ -1,6 +1,7 @@
 import { Session } from "@supabase/supabase-js";
-import { HiOutlinePlay, HiSolidPlay, HiSolidStop } from "solid-icons/hi";
+import { HiSolidPlay, HiSolidStop } from "solid-icons/hi";
 import { createSignal, Show } from "solid-js";
+
 import {
   Button,
   Loader,
@@ -10,11 +11,11 @@ import {
 } from "../../../components";
 import { useAuth } from "../../../contexts";
 import { useTasks } from "../../tasks/services";
+import { TaskStatus } from "../../tasks/type";
 import { TrackerWithTask, useEndTracker, useStartTracker } from "../services";
 import { Timer } from "./Timer";
 
 interface RunningTrackerProps {
-  // add props here
   runningTracker: TrackerWithTask | null;
   loading: boolean;
 }
@@ -27,7 +28,8 @@ export function RunningTracker(props: RunningTrackerProps) {
   const [value, setValue] = createSignal(props.runningTracker?.value);
 
   const [session] = useAuth();
-  const tasksQuery = useTasks();
+  const tasksParams = () => ({ status: "ongoing" as TaskStatus });
+  const tasksQuery = useTasks(tasksParams);
   const startMutation = useStartTracker();
   const endMutation = useEndTracker();
 
@@ -97,7 +99,7 @@ export function RunningTracker(props: RunningTrackerProps) {
                 <Select
                   name="task_id"
                   options={
-                    tasksQuery.data?.map((t) => ({
+                    tasksQuery.data?.tasks.map((t) => ({
                       label: t.task,
                       value: t.id,
                     })) || []

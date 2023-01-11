@@ -1,6 +1,4 @@
-interface PageTitleProps {
-  // add props here
-}
+interface PageTitleProps {}
 
 export function PageTitle(props: PageTitleProps) {
   return (

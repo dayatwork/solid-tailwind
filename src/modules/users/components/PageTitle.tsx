@@ -1,8 +1,6 @@
 import { A } from "@solidjs/router";
 
-interface PageTitleProps {
-  // add props here
-}
+interface PageTitleProps {}
 
 export function PageTitle(props: PageTitleProps) {
   return (

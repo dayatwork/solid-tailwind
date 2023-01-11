@@ -10,7 +10,7 @@ import {
 } from "../../../components";
 import { useAuth } from "../../../contexts";
 import { taskStatusOptions } from "../constant";
-import { TaskWithAssignor, useCreateTask, useUpdateTask } from "../services";
+import { TaskWithAssignor, useUpdateTask } from "../services";
 import { TaskStatus } from "../type";
 
 interface UpdateTaskFormProps {

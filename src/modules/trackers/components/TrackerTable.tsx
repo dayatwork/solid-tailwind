@@ -1,7 +1,5 @@
-import { A } from "@solidjs/router";
-import { createEffect, For, Show } from "solid-js";
-import { Avatar, Badge, Dot } from "../../../components";
-import { formatDate, formatTime } from "../../../utils/date";
+import { For, Show } from "solid-js";
+
 import { groupTrackersByDate } from "../helper";
 import { TrackerWithTask } from "../services";
 import GroupedTracker from "./GroupedTracker";
@@ -14,14 +12,6 @@ interface TrackerTableProps {
 export function TrackerTable(props: TrackerTableProps) {
   const groupedTrackers = () => groupTrackersByDate(props.trackers);
   const dates = () => groupedTrackers() && Object.keys(groupedTrackers());
-
-  createEffect(() => {
-    console.log({ groupedTrackers: groupedTrackers() });
-  });
-
-  createEffect(() => {
-    console.log({ dates: dates() });
-  });
 
   return (
     <div class="mt-8 hidden sm:block">

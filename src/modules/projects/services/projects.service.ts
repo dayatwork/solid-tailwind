@@ -39,17 +39,43 @@ export const PROJECTS_KEY = "projects";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Projects *******
-export const getProjects = async () => {
-  let { data, error } = await supabase
+interface GetProjectsParams {
+  status?: ProjectStatus;
+  name?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getProjects = async (params: GetProjectsParams) => {
+  const { name, status, limit = 10, page = 1 } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("projects")
-    .select(SELECT_PROJECT_WITH_MEMBER_QUERY)
-    .order("created_at");
+    .select(SELECT_PROJECT_WITH_MEMBER_QUERY, { count: "exact" })
+    .order("created_at")
+    .range(from, to);
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  if (name) {
+    query = query.ilike("name", `%${name}%`);
+  }
+
+  let { data, error, count } = await query;
 
   if (error) {
     throw error;
   }
 
-  return data as ProjectWithMembers[];
+  return { count, projects: data } as {
+    count: number;
+    projects: ProjectWithMembers[];
+  };
 };
 
 // ******* Get Project *******
@@ -152,10 +178,14 @@ export const deleteProjectMember = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Projects Query  *******
-export const useProjects = () => {
-  return createQuery(() => [PROJECTS_KEY], getProjects, {
-    staleTime: Infinity,
-  });
+export const useProjects = (params: () => GetProjectsParams) => {
+  return createQuery(
+    () => [PROJECTS_KEY, params()],
+    () => getProjects(params()),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Project Query  *******

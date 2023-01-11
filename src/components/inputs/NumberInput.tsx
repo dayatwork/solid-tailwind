@@ -8,6 +8,7 @@ interface NumberInputProps {
   error?: string;
   description?: string;
   disabled?: boolean;
+  placeholder?: string;
   min?: number;
   max?: number;
   minFractionDigits?: number;
@@ -43,7 +44,9 @@ export function NumberInput(props: NumberInputProps) {
   return (
     <div {...api().rootProps}>
       <label
-        class="block mb-1 text-sm font-medium text-gray-700"
+        class={`block text-sm font-medium text-gray-700 ${
+          props.label ? "mb-1" : ""
+        }`}
         {...api().labelProps}
       >
         {props.label}
@@ -61,6 +64,7 @@ export function NumberInput(props: NumberInputProps) {
           }`}
           {...api().inputProps}
           readOnly={props.readonly}
+          placeholder={props.placeholder}
         />
         <Show when={!props.readonly && !props.disabled}>
           <div class="absolute inset-y-0 right-0 flex flex-col rounded-md p-[1px]">

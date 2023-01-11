@@ -22,6 +22,39 @@ export const USERS_KEY = "users";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Users *******
+interface GetUsersParams {
+  limit?: number;
+  page?: number;
+  search?: string;
+}
+
+export const getUsers = async (params: GetUsersParams) => {
+  const { search, limit = 10, page = 1 } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("profiles")
+    .select("*", { count: "exact" })
+    .order("registered_at")
+    .range(from, to);
+
+  if (search) {
+    query = query.or(
+      `email.ilike.%${search}%,full_name.ilike.%${search}%,employee_number.ilike.%${search.toLowerCase()}%`
+    );
+  }
+
+  let { data, error, count } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return { count, users: data };
+};
+
 export const getUsersForDropdowns = async () => {
   let { data, error } = await supabase.from("profiles").select("id, full_name");
 
@@ -32,24 +65,18 @@ export const getUsersForDropdowns = async () => {
   return data.map((u) => ({ label: u.full_name, value: u.id }));
 };
 
-export const getUsers = async () => {
-  let { data, error } = await supabase.from("profiles").select("*");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-};
-
 // ==================================
 // ======== Query Functions =========
 // ==================================
 // ******* Get Users Query  *******
-export const useUsers = () => {
-  return createQuery(() => [USERS_KEY], getUsers, {
-    staleTime: Infinity,
-  });
+export const useUsers = (params: () => GetUsersParams) => {
+  return createQuery(
+    () => [USERS_KEY, params()],
+    () => getUsers(params()),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 export const useUsersDropdown = () => {

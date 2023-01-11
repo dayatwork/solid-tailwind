@@ -22,17 +22,63 @@ export const WORKPLANS_KEY = "workplans";
 // ======== Fetchers =========
 // ===========================
 // ******* Get Workplans *******
-export const getWorkplans = async () => {
-  let { data, error } = await supabase
+interface GetWorkplansParams {
+  employee_id?: string;
+  status?: WorkplanStatus;
+  year?: number;
+  week?: number;
+  plan?: string;
+  limit?: number;
+  page?: number;
+}
+
+export const getWorkplans = async (params: GetWorkplansParams) => {
+  const {
+    employee_id,
+    status,
+    week,
+    year,
+    plan,
+    limit = 10,
+    page = 1,
+  } = params;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
     .from("workplans")
-    .select("*")
-    .order("created_at");
+    .select("*", { count: "exact" })
+    .order("created_at")
+    .range(from, to);
+
+  if (employee_id) {
+    query = query.eq("employee_id", employee_id);
+  }
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  if (week) {
+    query = query.eq("week", week);
+  }
+
+  if (year) {
+    query = query.eq("year", year);
+  }
+
+  if (plan) {
+    query = query.ilike("plan", `%${plan}%`);
+  }
+
+  let { data, error, count } = await query;
 
   if (error) {
     throw error;
   }
 
-  return data;
+  return { count, workplans: data };
 };
 
 // ******* Get Workplan *******
@@ -111,10 +157,14 @@ export const deleteWorkplan = async (id: string) => {
 // ======== Query Functions =========
 // ==================================
 // ******* Get Workplans Query  *******
-export const useWorkplans = () => {
-  return createQuery(() => [WORKPLANS_KEY], getWorkplans, {
-    staleTime: Infinity,
-  });
+export const useWorkplans = (params: () => GetWorkplansParams) => {
+  return createQuery(
+    () => [WORKPLANS_KEY, params()],
+    () => getWorkplans(params()),
+    {
+      staleTime: Infinity,
+    }
+  );
 };
 
 // ******* Get Workplan Query  *******
